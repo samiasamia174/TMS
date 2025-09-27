@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bus {{ bus.number }} Live Map</title>
+  <style>#map{height:80vh;width:100%;} body{margin:0;font-family:Arial}</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+const BUS_ID={{ bus.id }};
+const POLL_INTERVAL=5000;
+let map, marker;
+
+function initMap(){
+  const initial={lat:23.7808875,lng:90.2792371};
+  map=new google.maps.Map(document.getElementById('map'),{zoom:14,center:initial});
+  marker=new google.maps.Marker({position:initial,map:map,title:'Bus {{ bus.number }}'});
+  poll();
+}
+
+async function poll(){
+  try{
+    const res=await fetch(`/tracking/api/location/${BUS_ID}/`);
+    if(!res.ok) throw new Error('No location');
+    const data=await res.json();
+    const pos={lat:parseFloat(data.lat), lng:parseFloat(data.lng)};
+    marker.setPosition(pos);
+    map.setCenter(pos);
+  }catch(e){console.log(e);}
+  setTimeout(poll,POLL_INTERVAL);
+}
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap"></script>
+</body>
+</html>
