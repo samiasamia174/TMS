@@ -1,0 +1,23 @@
+name: CI
+on: [push,pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: TMS_db
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: python-version: 3.11
+      - name: Install deps
+        run: pip install -r backend/requirements.txt
+      - name: Run migrations
+        run: cd backend && python manage.py migrate --no input

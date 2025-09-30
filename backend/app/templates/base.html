@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="utf-8">
+  <title>UAP TMS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_KEY }}"></script>
 </head>
 <body>
-
+  <header><h1>UAP TMS</h1></header>
+  <main>{% block content %}{% endblock %}</main>
+  <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

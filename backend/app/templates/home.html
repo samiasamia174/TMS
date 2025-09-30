@@ -5,6 +5,29 @@
     <title>Title</title>
 </head>
 <body>
+   {% extends 'base.html' %}
+{% block content %}
+<h2>Available Buses</h2>
+<div id="buses"></div>
+<h2>Live Map</h2>
+<div id="map" style="height:400px"></div>
+
+<script>
+async function fetchBuses(){ let r=await fetch('/api/buses/'); return r.json(); }
+async function fetchLocs(){ let r=await fetch('/api/locations/'); return r.json(); }
+function initMap(locs){
+  const map = new google.maps.Map(document.getElementById('map'), {zoom:13, center:{lat:23.8,lng:90.4}});
+  locs.forEach(l=> new google.maps.Marker({position:{lat:parseFloat(l.lat),lng:parseFloat(l.lng)}, map}));
+}
+async function main(){
+  const buses = await fetchBuses();
+  document.getElementById('buses').innerHTML = buses.map(b=>`<div>${b.number} - ${b.route}</div>`).join('');
+  const locs = await fetchLocs();
+  initMap(locs);
+}
+main();
+</script>
+{% endblock %}
 
 </body>
 </html>
