@@ -1,10 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+  {% extends 'base/base.html' %}
+
+{% block title %}Control Panel - UAP TMS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">
+            <i class="fas fa-cog"></i> Control Panel
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'buses:manage_buses' %}" class="text-decoration-none">
+            <div class="card text-center h-100 border-primary">
+                <div class="card-body">
+                    <i class="fas fa-bus fa-4x text-primary mb-3"></i>
+                    <h5>Manage Buses</h5>
+                    <p class="text-muted">Add, edit, or delete bus information</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'registrations:all_registrations' %}" class="text-decoration-none">
+            <div class="card text-center h-100 border-success">
+                <div class="card-body">
+                    <i class="fas fa-clipboard-list fa-4x text-success mb-3"></i>
+                    <h5>View Registrations</h5>
+                    <p class="text-muted">View all bus registrations</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <a href="{% url 'tracking:manage_tracking' %}" class="text-decoration-none">
+            <div class="card text-center h-100 border-info">
+                <div class="card-body">
+                    <i class="fas fa-map-marked-alt fa-4x text-info mb-3"></i>
+                    <h5>Manage Tracking</h5>
+                    <p class="text-muted">Update bus locations and tracking</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i> Statistics
+            </div>
+            <div class="card-body">
+                <p><strong>Total Users:</strong> Coming soon...</p>
+                <p><strong>Total Buses:</strong> Coming soon...</p>
+                <p><strong>Active Registrations:</strong> Coming soon...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-bell"></i> Recent Activity
+            </div>
+            <div class="card-body">
+                <p class="text-muted">No recent activity</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tools"></i> System Tools
+            </div>
+            <div class="card-body">
+                <a href="{% url 'admin:index' %}" class="btn btn-danger" target="_blank">
+                    <i class="fas fa-user-shield"></i> Django Admin Panel
+                </a>
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </body>
 </html>
