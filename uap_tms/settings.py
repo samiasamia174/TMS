@@ -27,9 +27,9 @@ INSTALLED_APPS = [
 
     # Our apps
     'accounts',
-    'buses',
-    'registrations',
-    'tracking',
+    #'buses',
+    #'registrations',
+    #'tracking',
 
     # Third party apps
     'crispy_forms',
