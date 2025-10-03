@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-  {% extends 'base/base.html' %}
+{% extends 'base/base.html' %}
 
 {% block title %}Control Panel - UAP TMS{% endblock %}
 
@@ -15,44 +8,53 @@
         <h2 class="mb-4">
             <i class="fas fa-cog"></i> Control Panel
         </h2>
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> Full control panel features will be available once Zakir and Retu complete their modules.
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-4 mb-4">
-        <a href="{% url 'buses:manage_buses' %}" class="text-decoration-none">
-            <div class="card text-center h-100 border-primary">
-                <div class="card-body">
-                    <i class="fas fa-bus fa-4x text-primary mb-3"></i>
-                    <h5>Manage Buses</h5>
-                    <p class="text-muted">Add, edit, or delete bus information</p>
-                </div>
+        <div class="card text-center h-100 border-secondary">
+            <div class="card-body">
+                <i class="fas fa-bus fa-4x text-secondary mb-3"></i>
+                <h5>Manage Buses</h5>
+                <p class="text-muted">Add, edit, or delete bus information</p>
+                <button class="btn btn-secondary" disabled>
+                    <i class="fas fa-lock"></i> Coming Soon
+                </button>
+                <p class="mt-2 mb-0 text-muted small">Waiting for Zakir's module</p>
             </div>
-        </a>
+        </div>
     </div>
 
     <div class="col-md-4 mb-4">
-        <a href="{% url 'registrations:all_registrations' %}" class="text-decoration-none">
-            <div class="card text-center h-100 border-success">
-                <div class="card-body">
-                    <i class="fas fa-clipboard-list fa-4x text-success mb-3"></i>
-                    <h5>View Registrations</h5>
-                    <p class="text-muted">View all bus registrations</p>
-                </div>
+        <div class="card text-center h-100 border-secondary">
+            <div class="card-body">
+                <i class="fas fa-clipboard-list fa-4x text-secondary mb-3"></i>
+                <h5>View Registrations</h5>
+                <p class="text-muted">View all bus registrations</p>
+                <button class="btn btn-secondary" disabled>
+                    <i class="fas fa-lock"></i> Coming Soon
+                </button>
+                <p class="mt-2 mb-0 text-muted small">Waiting for Zakir's module</p>
             </div>
-        </a>
+        </div>
     </div>
 
     <div class="col-md-4 mb-4">
-        <a href="{% url 'tracking:manage_tracking' %}" class="text-decoration-none">
-            <div class="card text-center h-100 border-info">
-                <div class="card-body">
-                    <i class="fas fa-map-marked-alt fa-4x text-info mb-3"></i>
-                    <h5>Manage Tracking</h5>
-                    <p class="text-muted">Update bus locations and tracking</p>
-                </div>
+        <div class="card text-center h-100 border-secondary">
+            <div class="card-body">
+                <i class="fas fa-map-marked-alt fa-4x text-secondary mb-3"></i>
+                <h5>Manage Tracking</h5>
+                <p class="text-muted">Update bus locations and tracking</p>
+                <button class="btn btn-secondary" disabled>
+                    <i class="fas fa-lock"></i> Coming Soon
+                </button>
+                <p class="mt-2 mb-0 text-muted small">Waiting for Retu's module</p>
             </div>
-        </a>
+        </div>
     </div>
 </div>
 
@@ -66,6 +68,7 @@
                 <p><strong>Total Users:</strong> Coming soon...</p>
                 <p><strong>Total Buses:</strong> Coming soon...</p>
                 <p><strong>Active Registrations:</strong> Coming soon...</p>
+                <p class="text-muted mb-0 small">Statistics will be available after all modules are integrated</p>
             </div>
         </div>
     </div>
@@ -77,6 +80,7 @@
             </div>
             <div class="card-body">
                 <p class="text-muted">No recent activity</p>
+                <p class="text-muted mb-0 small">Activity logs will appear here once system is fully operational</p>
             </div>
         </div>
     </div>
@@ -86,7 +90,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <i class="fas fa-tools"></i> System Tools
+                <i class="fas fa-tools"></i> Available Tools
             </div>
             <div class="card-body">
                 <a href="{% url 'admin:index' %}" class="btn btn-danger" target="_blank">
@@ -95,10 +99,12 @@
                 <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
+                <hr>
+                <p class="text-muted mb-0">
+                    <i class="fas fa-info-circle"></i> You can manage users through Django Admin Panel while other modules are being developed.
+                </p>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-</body>
-</html>
