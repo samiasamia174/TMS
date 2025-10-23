@@ -1,4 +1,6 @@
-from django.db import models
+import os
+
+models_content = '''from django.db import models
 from django.conf import settings
 import uuid
 from django.utils import timezone
@@ -87,3 +89,10 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment {self.transaction_id} - {self.amount}"
+'''
+
+# Write to buses/models.py
+with open('buses/models.py', 'w') as f:
+    f.write(models_content)
+
+print("✅ buses/models.py created successfully!")

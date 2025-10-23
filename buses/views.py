@@ -311,3 +311,23 @@ def make_payment(request):
 
 def search_results(request):
     return render(request, 'bus/search_results.html')
+
+@login_required
+def profile(request):
+    """User profile management"""
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user, user_type='student')
+    
+    if request.method == 'POST':
+        profile.phone = request.POST.get('phone', '')
+        profile.address = request.POST.get('address', '')
+        profile.student_id = request.POST.get('student_id', '')
+        profile.user_type = request.POST.get('user_type', 'student')
+        profile.save()
+        
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('profile')
+    
+    return render(request, 'auth/profile.html', {'profile': profile})
