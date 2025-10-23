@@ -1,4 +1,4 @@
-﻿from django.contrib import admin
+from django.contrib import admin
 from django.urls import path
 from buses import views
 
@@ -23,8 +23,9 @@ urlpatterns = [
     # Bus Registration URLs - Added by Zakir
     path('bus-registration/', views.bus_registration, name='bus_registration'),
     path('search-routes/', views.search_routes, name='search_routes'),
+    path('search-results/', views.search_results, name='search_results'),
     path('select-bus/', views.select_bus, name='select_bus'),
-    path('payment/', views.payment, name='payment'),
+    path('make-payment/', views.make_payment, name='make_payment'),
     path('confirmation/', views.confirmation, name='confirmation'),
     path('contact-us/', views.contact_us, name='contact_us'),
 ]
