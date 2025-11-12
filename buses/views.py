@@ -7,28 +7,76 @@ from .models import *
 
 User = get_user_model()
 
+
 # Home view
 def home(request):
     return render(request, 'home.html')
+
+
+def signup(request):
+    if request.method == 'POST':
+        # Add your signup logic here
+        pass
+    return render(request, 'signup.html')
+
+def confirmation(request):
+    return render(request, 'confirmation.html')
+
+def signin(request):
+    if request.method == 'POST':
+        # Add your signin logic here
+        pass
+    return render(request, 'login.html')
+
+
+def sign_out(request):
+    logout(request)
+    return redirect('home')
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
 
 # Bus registration views - by Zakir
 def bus_registration(request):
     return render(request, 'bus/registration.html')
 
+
 def search_routes(request):
     return render(request, 'bus/search_routes.html')
+
+
+def booking_confirmation(request):
+    # Get the booking details from session or POST data
+    booking = request.session.get('booking_details', {})
+
+    if not booking:
+        messages.error(request, 'No booking information found.')
+        return redirect('home')
+
+    context = {
+        'booking': booking
+    }
+
+
+    if 'booking_details' in request.session:
+        del request.session['booking_details']
+
+    return render(request, 'bus/booking_confirmation.html', context)
+
 
 def select_bus(request):
     return render(request, 'bus/select_bus.html')
 
-def payment(request):
+
+def make_payment(request):
     return render(request, 'bus/payment.html')
 
-def confirmation(request):
-    return render(request, 'bus/confirmation.html')
 
 def contact_us(request):
     return render(request, 'contact_us.html')
+
 
 # =============================================
 # USER AUTHENTICATION SYSTEM - ADDED BY SAMIA
@@ -49,11 +97,11 @@ def signup(request):
         if password1 != password2:
             messages.error(request, 'Passwords do not match!')
             return render(request, 'auth/signup.html')
-        
+
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists!')
             return render(request, 'auth/signup.html')
-        
+
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already registered!')
             return render(request, 'auth/signup.html')
@@ -64,7 +112,7 @@ def signup(request):
                 email=email,
                 password=password1
             )
-            
+
             UserProfile.objects.create(
                 user=user,
                 user_type=user_type,
@@ -72,28 +120,29 @@ def signup(request):
                 phone=phone,
                 address=address
             )
-            
+
             messages.success(request, 'Account created successfully! Please sign in.')
             return redirect('signin')
-            
+
         except Exception as e:
             messages.error(request, f'Error creating account: {str(e)}')
             return render(request, 'auth/signup.html')
-    
+
     return render(request, 'auth/signup.html')
+
 
 def signin(request):
     # User login/signin view
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
+
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
-            
+
             try:
                 profile = UserProfile.objects.get(user=user)
                 if profile.user_type == 'authority':
@@ -104,14 +153,16 @@ def signin(request):
                 return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password!')
-    
+
     return render(request, 'auth/signin.html')
+
 
 def sign_out(request):
     # User logout view
     logout(request)
     messages.success(request, 'You have been successfully signed out!')
     return redirect('home')
+
 
 @login_required
 def dashboard(request):
@@ -120,11 +171,12 @@ def dashboard(request):
         user_profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
         user_profile = UserProfile.objects.create(user=request.user, user_type='student')
-    
+
     context = {
         'user_profile': user_profile
     }
     return render(request, 'dashboard.html', context)
+
 
 @login_required
 def profile(request):
@@ -133,18 +185,19 @@ def profile(request):
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user, user_type='student')
-    
+
     if request.method == 'POST':
         profile.phone = request.POST.get('phone', '')
         profile.address = request.POST.get('address', '')
         profile.student_id = request.POST.get('student_id', '')
         profile.user_type = request.POST.get('user_type', 'student')
         profile.save()
-        
+
         messages.success(request, 'Profile updated successfully!')
         return redirect('profile')
-    
+
     return render(request, 'auth/profile.html', {'profile': profile})
+
 
 # =============================================
 # ADMIN/AUTHORITY PANEL - ADDED BY SAMIA
@@ -161,15 +214,15 @@ def authority_panel(request):
     except UserProfile.DoesNotExist:
         messages.error(request, 'Access denied! Please complete your profile.')
         return redirect('profile')
-    
+
     total_buses = Bus.objects.count()
     active_buses = Bus.objects.filter(is_active=True).count()
     total_routes = Route.objects.count()
     total_bookings = Booking.objects.count()
     active_bookings = Booking.objects.filter(is_confirmed=True).count()
-    
+
     recent_bookings = Booking.objects.select_related('user', 'schedule').order_by('-booking_date')[:10]
-    
+
     context = {
         'total_buses': total_buses,
         'active_buses': active_buses,
@@ -180,6 +233,7 @@ def authority_panel(request):
     }
     return render(request, 'authority/panel.html', context)
 
+
 @login_required
 def manage_buses(request):
     # Manage buses - add, edit, delete
@@ -189,16 +243,16 @@ def manage_buses(request):
             return redirect('dashboard')
     except UserProfile.DoesNotExist:
         return redirect('dashboard')
-    
+
     buses = Bus.objects.all()
-    
+
     if request.method == 'POST':
         bus_number = request.POST.get('bus_number')
         bus_name = request.POST.get('bus_name')
         capacity = request.POST.get('capacity')
         driver_name = request.POST.get('driver_name')
         driver_contact = request.POST.get('driver_contact')
-        
+
         if Bus.objects.filter(bus_number=bus_number).exists():
             messages.error(request, 'Bus with this number already exists!')
         else:
@@ -210,10 +264,11 @@ def manage_buses(request):
                 driver_contact=driver_contact
             )
             messages.success(request, 'Bus added successfully!')
-        
+
         return redirect('manage_buses')
-    
+
     return render(request, 'authority/manage_buses.html', {'buses': buses})
+
 
 @login_required
 def manage_routes(request):
@@ -224,9 +279,9 @@ def manage_routes(request):
             return redirect('dashboard')
     except UserProfile.DoesNotExist:
         return redirect('dashboard')
-    
+
     routes = Route.objects.all()
-    
+
     if request.method == 'POST':
         route_name = request.POST.get('route_name')
         start_point = request.POST.get('start_point')
@@ -235,7 +290,7 @@ def manage_routes(request):
         distance = request.POST.get('distance')
         estimated_time = request.POST.get('estimated_time')
         fare = request.POST.get('fare')
-        
+
         Route.objects.create(
             route_name=route_name,
             start_point=start_point,
@@ -247,8 +302,9 @@ def manage_routes(request):
         )
         messages.success(request, 'Route added successfully!')
         return redirect('manage_routes')
-    
+
     return render(request, 'authority/manage_routes.html', {'routes': routes})
+
 
 @login_required
 def manage_schedules(request):
@@ -259,21 +315,21 @@ def manage_schedules(request):
             return redirect('dashboard')
     except UserProfile.DoesNotExist:
         return redirect('dashboard')
-    
+
     schedules = Schedule.objects.select_related('bus', 'route').all()
     buses = Bus.objects.filter(is_active=True)
     routes = Route.objects.all()
-    
+
     if request.method == 'POST':
         bus_id = request.POST.get('bus')
         route_id = request.POST.get('route')
         departure_time = request.POST.get('departure_time')
         arrival_time = request.POST.get('arrival_time')
         date = request.POST.get('date')
-        
+
         bus = Bus.objects.get(id=bus_id)
         route = Route.objects.get(id=route_id)
-        
+
         Schedule.objects.create(
             bus=bus,
             route=route,
@@ -284,13 +340,14 @@ def manage_schedules(request):
         )
         messages.success(request, 'Schedule added successfully!')
         return redirect('manage_schedules')
-    
+
     context = {
         'schedules': schedules,
         'buses': buses,
         'routes': routes
     }
     return render(request, 'authority/manage_schedules.html', context)
+
 
 @login_required
 def view_bookings(request):
@@ -301,33 +358,15 @@ def view_bookings(request):
             return redirect('dashboard')
     except UserProfile.DoesNotExist:
         return redirect('dashboard')
-    
+
     bookings = Booking.objects.select_related('user', 'schedule').order_by('-booking_date')
     return render(request, 'authority/view_bookings.html', {'bookings': bookings})
+
 
 # Missing view functions - Added to fix URL references
 def make_payment(request):
     return render(request, 'bus/payment.html')
 
+
 def search_results(request):
     return render(request, 'bus/search_results.html')
-
-@login_required
-def profile(request):
-    """User profile management"""
-    try:
-        profile = UserProfile.objects.get(user=request.user)
-    except UserProfile.DoesNotExist:
-        profile = UserProfile.objects.create(user=request.user, user_type='student')
-    
-    if request.method == 'POST':
-        profile.phone = request.POST.get('phone', '')
-        profile.address = request.POST.get('address', '')
-        profile.student_id = request.POST.get('student_id', '')
-        profile.user_type = request.POST.get('user_type', 'student')
-        profile.save()
-        
-        messages.success(request, 'Profile updated successfully!')
-        return redirect('profile')
-    
-    return render(request, 'auth/profile.html', {'profile': profile})

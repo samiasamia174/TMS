@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     'tracking',
     'registrations',
     'tms_core',
-    'payments',
+    #'payments',
 ]
 
 MIDDLEWARE = [
