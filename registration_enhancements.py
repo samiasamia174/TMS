@@ -84,3 +84,7 @@ class RegistrationEnhancer:
 
 registration_enhancer = RegistrationEnhancer()
 print("? Registration Enhancements Module Loaded")
+
+
+def registration_enhance():
+    return None

@@ -3,3 +3,5 @@
 class BusesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'buses'
+def ready(self):
+    pass

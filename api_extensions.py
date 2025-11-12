@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, request
 from datetime import datetime
 from realtime_tracking import tracker
 from payment_system import payment_processor
-from registration_enhancements import registration_enhancer
+from registration_enhancements import registratio
 
 api_ext = Blueprint('api_extensions', __name__)
 
