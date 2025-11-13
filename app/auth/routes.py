@@ -14,7 +14,7 @@ def login():
             
             if not email or not password:
                 flash('Please fill all fields', 'error')
-                return render_template('login.html')
+                return render_template('signin.html')
             
             # Hash password
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -41,7 +41,7 @@ def login():
         except Exception as e:
             flash(f'Login error: {str(e)}', 'error')
     
-    return render_template('login.html')
+    return render_template('signin.html')
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():

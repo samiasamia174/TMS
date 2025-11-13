@@ -25,7 +25,7 @@ except ImportError as e:
     
     @auth_bp.route('/login')
     def login():
-        return render_template('login.html')
+        return render_template('signin.html')
     
     @auth_bp.route('/signup')
     def signup():
@@ -40,7 +40,7 @@ except ImportError as e:
 
 # Check templates
 templates_dir = 'templates'
-auth_templates = ['login.html', 'signup.html']
+auth_templates = ['signin.html', 'signup.html']
 for template in auth_templates:
     template_path = os.path.join(templates_dir, template)
     if os.path.exists(template_path):
