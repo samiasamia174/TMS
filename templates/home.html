@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>Welcome to UAP Transportation System</h1>
+    <p>Manage your transportation needs efficiently.</p>
+    
+    {% if user.is_authenticated %}
+    <div class="alert alert-success">
+        Welcome, {{ user.username }}! <a href="{% url 'dashboard' %}" class="btn btn-success">Go to Dashboard</a>
+    </div>
+    {% else %}
+    <p>Please sign in to access the system.</p>
+    <a href="{% url 'signin' %}" class="btn btn-primary">Sign In</a>
+    <a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
+    {% endif %}
+</div>
+{% endblock %}

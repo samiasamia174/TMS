@@ -30,10 +30,14 @@ INSTALLED_APPS = [
     #'buses',
     #'registrations',
     #'tracking',
-
     # Third party apps
     'crispy_forms',
     'crispy_bootstrap4',
+    'buses',
+    'tracking',
+    'registrations',
+    'tms_core',
+    'payments'
 ]
 
 MIDDLEWARE = [
@@ -130,10 +134,19 @@ LOGOUT_REDIRECT_URL = 'accounts:home'
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
-
 # Email Configuration (for password reset - optional for now)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Session Settings
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
+
+
+# Authentication settings
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+
+# Session settings
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
