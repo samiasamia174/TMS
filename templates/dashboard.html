@@ -1,131 +1,37 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="card">
-    <div class="card-header">
-        <h3>Dashboard</h3>
-    </div>
-    <div class="card-body">
-        <h5>Welcome, {{ user.username }}!</h5>
-        <p>This is your dashboard. More features coming soon.</p>
-
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Bus Schedule</h5>
-                        <p><a href="{% url 'bus_schedule' %}" class="btn btn-sm btn-primary">View Schedule</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Book Bus</h5>
-                        <p><a href="{% url 'view_schedules' %}" class="btn btn-sm btn-success">Find & Book</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5>Live Tracking</h5>
-                        <p>Track bus locations</p>
-                    </div>
-                </div>
-            </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - TMS</title>
+    <style>
+        body { font-family: Arial; margin: 0; padding: 20px; }
+        .header { background: #f8f9fa; padding: 20px; margin-bottom: 20px; }
+        .nav a { margin-right: 15px; text-decoration: none; }
+        .user-info { float: right; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dashboard</h1>
+        <div class="user-info">
+            Welcome, <strong>{{ user.username }}</strong> |
+            <a href="{% url 'signout' %}">Logout</a>
+        </div>
+        <div class="nav">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
         </div>
     </div>
 
-    {% if upcoming_schedules %}
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5>Upcoming Schedules</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Bus</th>
-                            <th>Route</th>
-                            <th>Date</th>
-                            <th>Departure</th>
-                            <th>Seats</th>
-                            <th>Fare</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for schedule in upcoming_schedules %}
-                        <tr>
-                            <td>{{ schedule.bus.bus_number }}</td>
-                            <td>{{ schedule.route.start_point }} → {{ schedule.route.end_point }}</td>
-                            <td>{{ schedule.date }}</td>
-                            <td>{{ schedule.departure_time }}</td>
-                            <td>{{ schedule.available_seats }}</td>
-                            <td>${{ schedule.route.fare }}</td>
-                            <td>
-                                {% if schedule.available_seats > 0 and not is_authority %}
-                                <a href="{% url 'book_bus' schedule.id %}" class="btn btn-sm btn-primary">Book</a>
-                                {% elif is_authority %}
-                                <span class="text-muted">Authority view</span>
-                                {% else %}
-                                <span class="text-muted">Full</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+    <div class="content">
+        <h2>Welcome to your Dashboard, {{ user.username }}!</h2>
+        <p>You have successfully logged in.</p>
+
+        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0;">
+            <h3>User Information:</h3>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Last Login:</strong> {{ user.last_login }}</p>
         </div>
     </div>
-    {% endif %}
-
-    {# Removed My Recent Bookings section per request - users will manage bookings from the Bookings/Booking Details pages #}
-
-    {% if monthly_subscriptions %}
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5>My Monthly Subscriptions</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Subscription ID</th>
-                            <th>Route</th>
-                            <th>Period</th>
-                            <th>Seats</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for s in monthly_subscriptions %}
-                        <tr>
-                            <td>{{ s.subscription_id }}</td>
-                            <td>{{ s.schedule.route.start_point }} → {{ s.schedule.route.end_point }}</td>
-                            <td>{{ s.start_date }} – {{ s.end_date }}</td>
-                            <td>{{ s.passengers }}</td>
-                            <td>${{ s.monthly_amount }}</td>
-                            <td>{{ s.payment_status }} {% if not s.is_active %}(Inactive){% endif %}</td>
-                            <td>
-                                <a href="{% url 'subscription_detail' s.subscription_id %}" class="btn btn-sm btn-primary">View</a>
-                                {% if s.is_active %}
-                                <a href="{% url 'cancel_subscription' s.subscription_id %}" class="btn btn-sm btn-danger" onclick="return confirm('Cancel this subscription?');">Cancel</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
+</body>
+</html>
