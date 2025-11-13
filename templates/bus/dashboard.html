@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Bus Management System</title>
     <style>
         body {
@@ -15,26 +13,18 @@
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .header {
             text-align: center;
             margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
-        }
-        .welcome-message {
-            background: #e7f3ff;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
         }
         .nav-links {
             display: flex;
             gap: 15px;
-            margin-bottom: 30px;
+            margin: 30px 0;
             flex-wrap: wrap;
         }
         .nav-links a {
@@ -67,101 +57,47 @@
             margin-top: 0;
             color: #333;
         }
-        .user-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .messages {
-            margin-bottom: 20px;
-        }
-        .alert {
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚌 Bus Management System</h1>
-            <p>Your Transportation Dashboard</p>
-        </div>
-
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="welcome-message">
-            <h2>Welcome, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!</h2>
-            <p>You are logged in as: <strong>{{ user_profile.user_type|title }}</strong></p>
+            <h1>Bus Management System Dashboard</h1>
+            <p>Welcome to your transportation dashboard</p>
         </div>
 
         <div class="nav-links">
-            <a href="{% url 'buses:bus_schedule' %}">📅 Bus Schedule</a>
-            <a href="{% url 'buses:search_routes' %}">🔍 Search Routes</a>
-            <a href="{% url 'buses:profile' %}">👤 My Profile</a>
-            {% if user_profile.user_type == 'authority' %}
-            <a href="{% url 'buses:authority_panel' %}">⚙️ Authority Panel</a>
-            {% endif %}
-            <a href="{% url 'buses:sign_out' %}">🚪 Sign Out</a>
+            <a href="/schedule/">📅 Bus Schedule</a>
+            <a href="/search-routes/">🔍 Search Routes</a>
+            <a href="/profile/">👤 My Profile</a>
+            <a href="/contact-us/">📞 Contact Support</a>
+            <a href="/sign-out/">🚪 Sign Out</a>
         </div>
 
         <div class="dashboard-cards">
             <div class="card">
                 <h3>🚌 Quick Booking</h3>
                 <p>Book your bus tickets quickly and easily</p>
-                <a href="{% url 'buses:search_routes' %}">Start Booking</a>
+                <a href="/search-routes/" style="color: #007bff; text-decoration: none;">Start Booking →</a>
             </div>
-
+            
             <div class="card">
                 <h3>📋 My Bookings</h3>
                 <p>View and manage your current bookings</p>
-                <a href="#">View Bookings</a>
+                <a href="#" style="color: #007bff; text-decoration: none;">View Bookings →</a>
             </div>
-
+            
             <div class="card">
                 <h3>💰 Payment History</h3>
                 <p>Check your payment records and receipts</p>
-                <a href="#">View Payments</a>
+                <a href="#" style="color: #007bff; text-decoration: none;">View Payments →</a>
             </div>
-
+            
             <div class="card">
                 <h3>ℹ️ System Info</h3>
                 <p>Get help and information about the system</p>
-                <a href="{% url 'buses:contact_us' %}">Contact Support</a>
+                <a href="/contact-us/" style="color: #007bff; text-decoration: none;">Contact Support →</a>
             </div>
-        </div>
-
-        <div class="user-info">
-            <h3>Account Information</h3>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>User Type:</strong> {{ user_profile.user_type|title }}</p>
-            {% if user_profile.student_id %}
-            <p><strong>Student ID:</strong> {{ user_profile.student_id }}</p>
-            {% endif %}
-            {% if user_profile.phone %}
-            <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
-            {% endif %}
         </div>
     </div>
 </body>
