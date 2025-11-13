@@ -18,5 +18,5 @@ urlpatterns = [
     path('api/status/', transport_views.api_status, name='api_status'),
     path('bus/register/<int:bus_id>/', transport_views.register_bus, name='register_bus'),
     path('transport/', include('transportation.urls')),  # Keep this for any additional transportation URLs
-    path('payment/', include('payments.urls')),
+   # path('payment/', include('payments.urls')),
 ]
