@@ -1,7 +1,7 @@
 """
 Django settings for uap_tms project.
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -55,18 +55,20 @@ ROOT_URLCONF = 'uap_tms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),  # Global templates directory
+        ],
+        'APP_DIRS': True,  # This should be True to look in app templates folders
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
             ],
         },
-    },
+},
+
 ]
 
 WSGI_APPLICATION = 'uap_tms.wsgi.application'
