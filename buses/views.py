@@ -13,7 +13,7 @@ User = get_user_model()
 
 def home(request):
     """Home page view"""
-    return render(request, 'home_simple.html')
+    return render(request, 'home.html')
 
 def bus_schedule(request):
     """Bus schedule page"""
@@ -104,6 +104,8 @@ def signin(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        return redirect('home')  # Redirect to home after login
+        return render(request, 'signin.html')
 
         user = authenticate(request, username=username, password=password)
 
