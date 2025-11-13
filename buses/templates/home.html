@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}BusGo - Smart Transportation System{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="card text-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+        <div style="padding: 4rem 2rem;">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem; font-weight: 700;">
+                <i class="fas fa-bus"></i> BusGo
+            </h1>
+            <p style="font-size: 1.5rem; margin-bottom: 2rem; opacity: 0.9;">
+                Smart Transportation for Modern Cities
+            </p>
+            <p style="font-size: 1.1rem; margin-bottom: 3rem; opacity: 0.8; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Experience seamless bus travel with real-time tracking, easy bookings, and smart route planning.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/search-routes/" class="btn" style="background: white; color: var(--primary);">
+                    <i class="fas fa-search"></i> Find Routes
+                </a>
+                <a href="/signup/" class="btn" style="background: var(--accent); color: white;">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="features-section" style="margin-top: 3rem;">
+    <div class="grid grid-3">
+        <div class="card text-center">
+            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                <i class="fas fa-route"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem;">Smart Routes</h3>
+            <p style="color: var(--gray);">Intelligent route planning with real-time updates and optimized schedules.</p>
+        </div>
+        
+        <div class="card text-center">
+            <div style="font-size: 3rem; color: var(--success); margin-bottom: 1rem;">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem;">Easy Booking</h3>
+            <p style="color: var(--gray);">Book your tickets in seconds with our user-friendly mobile interface.</p>
+        </div>
+        
+        <div class="card text-center">
+            <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 style="margin-bottom: 1rem;">Secure Payments</h3>
+            <p style="color: var(--gray);">Safe and secure payment processing with multiple payment options.</p>
+        </div>
+    </div>
+</div>
+
+<div class="stats-section" style="margin-top: 3rem;">
+    <div class="card">
+        <div class="grid grid-4 text-center">
+            <div>
+                <div style="font-size: 2.5rem; color: var(--primary); font-weight: bold;">50+</div>
+                <div style="color: var(--gray);">Bus Routes</div>
+            </div>
+            <div>
+                <div style="font-size: 2.5rem; color: var(--success); font-weight: bold;">10K+</div>
+                <div style="color: var(--gray);">Happy Users</div>
+            </div>
+            <div>
+                <div style="font-size: 2.5rem; color: var(--accent); font-weight: bold;">24/7</div>
+                <div style="color: var(--gray);">Support</div>
+            </div>
+            <div>
+                <div style="font-size: 2.5rem; color: var(--warning); font-weight: bold;">99%</div>
+                <div style="color: var(--gray);">On Time</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-center {
+        text-align: center;
+    }
+    
+    .hero-section {
+        margin-bottom: 3rem;
+    }
+    
+    .features-section .card {
+        transition: transform 0.3s ease;
+    }
+    
+    .features-section .card:hover {
+        transform: translateY(-10px);
+    }
+    
+    .stats-section .card {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+    }
+</style>
+{% endblock %}
