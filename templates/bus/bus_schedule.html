@@ -11,7 +11,8 @@
 <div class="container mt-4">
     <h2>Bus Timetable</h2>
     <p class="text-muted">Read-only upcoming schedules. To book, use "Find & Book."</p>
-
+    <!-- If you have app_name in your urls.py -->
+    <a href="{% url 'buses:bus_schedule' %}">Bus Schedule</a>
     {% if recent_activities %}
     <div class="mb-3">
         <h4>My Recent Bookings & Subscriptions</h4>
@@ -133,5 +134,20 @@
 
 </div>
 {% endblock %}
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Schedule</title>
+</head>
+<body>
+    <h1>Bus Schedule</h1>
+    <p>This is the bus schedule page.</p>
+    <a href="{% url 'buses:dashboard' %}">Back to Dashboard</a>
 </body>
 </html>
