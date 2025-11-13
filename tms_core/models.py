@@ -1,5 +1,5 @@
-# Models moved to buses app
 from django.db import models
+
 
 class TmsCoreSetting(models.Model):
     setting_key = models.CharField(max_length=100, unique=True)
