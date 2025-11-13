@@ -1,4 +1,4 @@
-﻿from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -370,3 +370,4 @@ def make_payment(request):
 
 def search_results(request):
     return render(request, 'bus/search_results.html')
+
