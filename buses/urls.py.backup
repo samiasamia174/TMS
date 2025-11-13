@@ -1,0 +1,11 @@
+# buses/urls.py
+from django.urls import path
+from . import views
+
+app_name = 'buses'
+
+urlpatterns = [
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('schedule/', views.bus_schedule, name='bus_schedule'),  # ADD THIS LINE
+    # ... your other URLs
+]
