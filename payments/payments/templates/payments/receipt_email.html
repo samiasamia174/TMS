@@ -1,0 +1,28 @@
+<!-- payments/templates/payments/receipt_email.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Payment Receipt</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #2c3e50; text-align: center;">University Transportation System</h2>
+        <h3 style="text-align: center; color: #27ae60;">✅ Payment Receipt</h3>
+        <p>Dear <strong>{{ student_name }}</strong>,</p>
+        <p>Your payment has been successfully processed.</p>
+        <hr>
+        <ul>
+            <li><strong>Student ID:</strong> {{ student_id }}</li>
+            <li><strong>Vehicle Type:</strong> {{ vehicle_type }}</li>
+            <li><strong>Amount Paid:</strong> {{ amount }} BDT</li>
+            <li><strong>Email:</strong> {{ email }}</li>
+        </ul>
+        <hr>
+        <p>Thank you for using the University Transport Service!</p>
+        <p style="font-size: 0.9em; color: #7f8c8d;">
+            This is an automated message. Please do not reply.
+        </p>
+    </div>
+</body>
+</html>
