@@ -1,0 +1,10 @@
+<!-- Simple form for demo -->
+<form method="post">
+    {% csrf_token %}
+    <input name="student_name" placeholder="Full Name" required><br><br>
+    <input name="student_id" placeholder="Student ID" required><br><br>
+    <input name="vehicle_type" placeholder="Vehicle Type (Bus/Minibus)" required><br><br>
+    <input name="amount" placeholder="Amount (BDT)" value="500" required><br><br>
+    <input type="email" name="email" placeholder="Email" required><br><br>
+    <button type="submit">Pay Now</button>
+</form>
