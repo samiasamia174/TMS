@@ -371,13 +371,14 @@ def make_payment(request):
 def search_results(request):
     return render(request, 'bus/search_results.html')
 
-# buses/views.py
-def bus_schedule(request):
-    return render(request, 'buses/schedule.html', {'message': 'Bus schedule page'})
-def bus_schedule(request):
-    return render(request, 'buses/schedule.html', {'message': 'Bus schedule page'})
+def dashboard(request):
+    # Your dashboard logic here
+    context = {
+        'title': 'Dashboard',
+        'user': request.user,
+    }
+    return render(request, 'buses/dashboard.html', context)
 
-
 def bus_schedule(request):
-    # single canonical bus_schedule view; render template under 'bus/' to match other templates
-    return render(request, 'bus/schedule.html')
+    # Your bus schedule logic here
+    return render(request, 'buses/schedule.html')
