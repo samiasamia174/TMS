@@ -1,8 +1,8 @@
 from django.db import models
-<<<<<<< HEAD
+
 
 # Create your models here.
-=======
+
 from django.conf import settings
 import uuid
 from django.utils import timezone
@@ -241,4 +241,4 @@ class Payment(models.Model):
 
     def __str__(self):
         return f'Payment {self.transaction_id} - {self.amount}'
->>>>>>> 01bf5266120f9ee3c45cd18d1c208485b009e5b5
+

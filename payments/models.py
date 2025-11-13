@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from buses.models import Bus
+from django.conf import settings
 
 
 class Payment(models.Model):
@@ -11,7 +12,7 @@ class Payment(models.Model):
         ('failed', 'Failed'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     bus = models.ForeignKey(Bus, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=500.00)
     payment_method = models.CharField(max_length=20, default='credit_card')
