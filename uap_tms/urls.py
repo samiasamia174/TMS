@@ -12,7 +12,8 @@ urlpatterns = [
     path('sign-out/', views.sign_out, name='sign_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profile/', views.profile, name='profile'),
-    
+    path('', include('buses.urls')),  # register buses URL patterns so reverse('bus_schedule') resolves
+
     # Authority Panel URLs - Added by Samia
     path('authority-panel/', views.authority_panel, name='authority_panel'),
     path('authority/buses/', views.manage_buses, name='manage_buses'),
