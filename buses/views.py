@@ -1,3 +1,13 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from .models import *
+
+User = get_user_model()
+
+
 @login_required
 def dashboard(request):
     # User dashboard after login
