@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 ﻿from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -370,3 +372,4 @@ def make_payment(request):
 
 def search_results(request):
     return render(request, 'bus/search_results.html')
+>>>>>>> 01bf5266120f9ee3c45cd18d1c208485b009e5b5
