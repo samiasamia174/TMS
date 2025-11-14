@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.urls import path
+from django.shortcuts import redirect
 from django.views.generic import RedirectView
 from buses import views
 
 urlpatterns = [
+    path("schedule/", lambda request: redirect("search_routes")),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     
