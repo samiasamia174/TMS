@@ -3,73 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}UAP Transportation{% endblock %}</title>
+    <title>{% block title %}UAP Transportation System{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --uap-primary: #2c3e50;
-            --uap-secondary: #3498db;
-            --uap-accent: #e74c3c;
-            --uap-success: #27ae60;
+            --uap-blue: #1e3a8a;
+            --uap-light-blue: #3b82f6;
+            --uap-gold: #f59e0b;
+            --uap-dark: #1f2937;
+            --uap-light: #f8fafc;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--uap-light);
+            color: var(--uap-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--uap-blue) 0%, var(--uap-light-blue) 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 12px 0;
         }
         
         .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .navbar-brand .logo-icon {
+            background: white;
+            color: var(--uap-blue);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            color: var(--uap-primary) !important;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            padding: 10px 20px !important;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin: 0 4px;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.15);
+            color: white !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.1);
         }
         
         .btn-uap {
-            background: var(--uap-secondary);
-            color: white;
+            background: linear-gradient(135deg, var(--uap-gold) 0%, #fbbf24 100%);
+            color: var(--uap-dark);
             border: none;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
         
         .btn-uap:hover {
-            background: #2980b9;
-            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            color: var(--uap-dark);
         }
         
-        .nav-link.active {
-            color: var(--uap-secondary) !important;
-            font-weight: bold;
+        .btn-uap-outline {
+            border: 2px solid var(--uap-gold);
+            color: var(--uap-gold);
+            background: transparent;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-uap-outline:hover {
+            background: var(--uap-gold);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
         }
         
         .hero-section {
-            background: linear-gradient(135deg, var(--uap-primary) 0%, var(--uap-secondary) 100%);
+            background: linear-gradient(135deg, var(--uap-blue) 0%, var(--uap-light-blue) 100%);
             color: white;
-            padding: 100px 0;
+            padding: 140px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
         }
         
         .feature-card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            background: white;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         
-        .footer {
-            background: var(--uap-primary);
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--uap-blue), var(--uap-light-blue));
             color: white;
         }
         
+        .footer {
+            background: linear-gradient(135deg, var(--uap-dark) 0%, #374151 100%);
+            color: white;
+            position: relative;
+            margin-top: auto;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--uap-blue), var(--uap-gold), var(--uap-light-blue));
+        }
+        
         .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--uap-blue), var(--uap-light-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--uap-blue), var(--uap-light-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .alert {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--uap-light-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--uap-light-blue);
+            text-decoration: none;
+        }
+        
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .table th {
+            background: linear-gradient(135deg, var(--uap-blue), var(--uap-light-blue));
+            color: white;
+            border: none;
+            padding: 16px;
+        }
+        
+        .table td {
+            padding: 16px;
+            border-color: #f1f5f9;
+        }
+        
+        .badge {
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 500;
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <i class="fas fa-bus"></i> UAP Transportation
+                <div class="logo-icon">
+                    <i class="fas fa-bus"></i>
+                </div>
+                UAP Transportation
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -79,16 +274,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                            <i class="fas fa-home me-2"></i>Home
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/buses/' in request.path %}active{% endif %}" href="/buses/">Buses</a>
+                        <a class="nav-link {% if '/buses/' in request.path %}active{% endif %}" href="/buses/">
+                            <i class="fas fa-bus me-2"></i>Buses
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/routes/' in request.path %}active{% endif %}" href="/routes/">Routes</a>
+                        <a class="nav-link {% if '/routes/' in request.path %}active{% endif %}" href="/routes/">
+                            <i class="fas fa-route me-2"></i>Routes
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/booking/' in request.path %}active{% endif %}" href="/booking/">Booking</a>
+                        <a class="nav-link {% if '/booking/' in request.path %}active{% endif %}" href="/booking/">
+                            <i class="fas fa-ticket-alt me-2"></i>Booking
+                        </a>
                     </li>
                 </ul>
                 
@@ -96,21 +299,37 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ user.username }}
+                                <i class="fas fa-user-circle me-2"></i>{{ user.username }}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item {% if '/dashboard/' in request.path %}active{% endif %}" href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                                <li><a class="dropdown-item {% if '/profile/' in request.path %}active{% endif %}" href="/profile/"><i class="fas fa-user-circle"></i> Profile</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item {% if '/dashboard/' in request.path %}active{% endif %}" href="/dashboard/">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {% if '/profile/' in request.path %}active{% endif %}" href="/profile/">
+                                        <i class="fas fa-user-edit me-2"></i>Profile
+                                    </a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/sign-out/"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="/sign-out/">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link {% if '/signin/' in request.path %}active{% endif %}" href="/signin/"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+                            <a class="nav-link {% if '/signin/' in request.path %}active{% endif %}" href="/signin/">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-uap ms-2" href="/signup/"><i class="fas fa-user-plus"></i> Sign Up</a>
+                            <a class="btn btn-uap ms-2" href="/signup/">
+                                <i class="fas fa-user-plus me-2"></i>Sign Up
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -120,58 +339,89 @@
 
     <!-- Messages -->
     {% if messages %}
-    <div class="container mt-3">
+    <div class="container mt-4">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% else %}info-circle{% endif %} me-3 fa-lg"></i>
+                <div class="flex-grow-1">{{ message }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
     <!-- Main Content -->
-    <main>
+    <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-5">
+    <footer class="footer">
         <div class="container py-5">
             <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-bus"></i> UAP Transportation</h5>
-                    <p>Your reliable campus transportation solution. Safe, efficient, and convenient bus services for University of Asia Pacific students and staff.</p>
+                <div class="col-lg-4 mb-4">
+                    <h4 class="fw-bold mb-3">
+                        <i class="fas fa-bus me-2"></i>UAP Transportation
+                    </h4>
+                    <p class="text-light opacity-75">
+                        University of Asia Pacific's premier transportation service. 
+                        Providing safe, reliable, and convenient campus transportation 
+                        for students, faculty, and staff.
+                    </p>
+                    <div class="social-links mt-4">
+                        <a href="#" class="text-light me-3 opacity-75 hover-opacity-100" style="transition: opacity 0.3s;">
+                            <i class="fab fa-facebook fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-light me-3 opacity-75 hover-opacity-100" style="transition: opacity 0.3s;">
+                            <i class="fab fa-twitter fa-lg"></i>
+                        </a>
+                        <a href="#" class="text-light opacity-75 hover-opacity-100" style="transition: opacity 0.3s;">
+                            <i class="fab fa-linkedin fa-lg"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <h6>Quick Links</h6>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li><a href="/" class="text-light">Home</a></li>
-                        <li><a href="/buses/" class="text-light">Buses</a></li>
-                        <li><a href="/routes/" class="text-light">Routes</a></li>
-                        <li><a href="/booking/" class="text-light">Booking</a></li>
+                        <li class="mb-2"><a href="/" class="text-light opacity-75 text-decoration-none hover-opacity-100">Home</a></li>
+                        <li class="mb-2"><a href="/buses/" class="text-light opacity-75 text-decoration-none hover-opacity-100">Buses</a></li>
+                        <li class="mb-2"><a href="/routes/" class="text-light opacity-75 text-decoration-none hover-opacity-100">Routes</a></li>
+                        <li class="mb-2"><a href="/booking/" class="text-light opacity-75 text-decoration-none hover-opacity-100">Booking</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3">
-                    <h6>Contact Info</h6>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-map-marker-alt"></i> UAP Campus, Dhaka</li>
-                        <li><i class="fas fa-phone"></i> +880 XXXX-XXXXXX</li>
-                        <li><i class="fas fa-envelope"></i> transport@uap.edu.bd</li>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3">Contact Info</h6>
+                    <ul class="list-unstyled text-light opacity-75">
+                        <li class="mb-2">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            UAP Campus, Green Road, Dhaka
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2"></i>
+                            +880 XXXX-XXXXXX
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-envelope me-2"></i>
+                            transport@uap.edu.bd
+                        </li>
                     </ul>
                 </div>
-                <div class="col-md-3">
-                    <h6>Operating Hours</h6>
-                    <ul class="list-unstyled">
-                        <li>Monday - Friday: 7:00 AM - 8:00 PM</li>
-                        <li>Saturday: 8:00 AM - 6:00 PM</li>
-                        <li>Sunday: Closed</li>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="fw-bold mb-3">Operating Hours</h6>
+                    <ul class="list-unstyled text-light opacity-75">
+                        <li class="mb-1">Monday - Friday: 7:00 AM - 8:00 PM</li>
+                        <li class="mb-1">Saturday: 8:00 AM - 6:00 PM</li>
+                        <li class="mb-1">Sunday: Closed</li>
                     </ul>
                 </div>
             </div>
-            <hr class="bg-light">
+            <hr class="bg-light opacity-25 my-4">
             <div class="text-center">
-                <p>&copy; 2025 University of Asia Pacific - Transportation System. All rights reserved.</p>
+                <p class="mb-0 text-light opacity-75">
+                    &copy; 2025 University of Asia Pacific - Transportation System. All rights reserved.
+                </p>
             </div>
         </div>
     </footer>

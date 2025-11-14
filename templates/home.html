@@ -1,35 +1,45 @@
 {% extends "base.html" %}
 
-{% block title %}Home - UAP Transportation{% endblock %}
+{% block title %}UAP Transportation - Campus Mobility Solution{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">UAP Campus Transportation</h1>
-                <p class="lead mb-4">Safe, reliable, and convenient bus services for University of Asia Pacific students, faculty, and staff.</p>
+            <div class="col-lg-6 hero-content">
+                <h1 class="display-3 fw-bold mb-4">Campus Mobility<br>Redefined</h1>
+                <p class="lead mb-4 opacity-90">
+                    Experience premium transportation services at University of Asia Pacific. 
+                    Safe, reliable, and convenient bus services tailored for our academic community.
+                </p>
                 <div class="d-flex gap-3 flex-wrap">
                     {% if user.is_authenticated %}
-                        <a href="/booking/" class="btn btn-light btn-lg">
-                            <i class="fas fa-ticket-alt me-2"></i>Book a Ride
+                        <a href="/booking/" class="btn btn-light btn-lg px-4 py-3 fw-semibold">
+                            <i class="fas fa-ticket-alt me-2"></i>Book Your Ride
                         </a>
-                        <a href="/dashboard/" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
+                        <a href="/dashboard/" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                         </a>
                     {% else %}
-                        <a href="/signup/" class="btn btn-light btn-lg">
+                        <a href="/signup/" class="btn btn-light btn-lg px-4 py-3 fw-semibold">
                             <i class="fas fa-user-plus me-2"></i>Get Started
                         </a>
-                        <a href="/signin/" class="btn btn-outline-light btn-lg">
+                        <a href="/signin/" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">
                             <i class="fas fa-sign-in-alt me-2"></i>Sign In
                         </a>
                     {% endif %}
                 </div>
             </div>
             <div class="col-lg-6 text-center">
-                <i class="fas fa-bus" style="font-size: 200px; opacity: 0.8;"></i>
+                <div class="position-relative">
+                    <i class="fas fa-bus" style="font-size: 280px; opacity: 0.9;"></i>
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="bg-white rounded-circle p-4 shadow-lg" style="width: 120px; height: 120px;">
+                            <i class="fas fa-graduation-cap text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -39,35 +49,50 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Why Choose UAP Transportation?</h2>
-            <p class="text-muted">Experience premium campus transportation services</p>
+            <h2 class="fw-bold gradient-text mb-3">Why Choose UAP Transportation?</h2>
+            <p class="text-muted fs-5">Premium features for our academic community</p>
         </div>
         
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card feature-card h-100">
+                <div class="card feature-card h-100 border-0">
                     <div class="card-body text-center p-4">
-                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
-                        <h5>Safe & Secure</h5>
-                        <p class="text-muted">GPS tracked buses with trained drivers and comprehensive safety protocols for your peace of mind.</p>
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Safe & Secure</h5>
+                        <p class="text-muted mb-0">
+                            GPS tracked buses with trained drivers and comprehensive safety 
+                            protocols ensuring your security throughout the journey.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card feature-card h-100">
+                <div class="card feature-card h-100 border-0">
                     <div class="card-body text-center p-4">
-                        <i class="fas fa-clock fa-3x text-success mb-3"></i>
-                        <h5>Punctual Service</h5>
-                        <p class="text-muted">Strict adherence to schedules with real-time tracking to ensure you reach your destination on time.</p>
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Punctual Service</h5>
+                        <p class="text-muted mb-0">
+                            Strict adherence to schedules with real-time tracking to ensure 
+                            you reach your classes and appointments on time.
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card feature-card h-100">
+                <div class="card feature-card h-100 border-0">
                     <div class="card-body text-center p-4">
-                        <i class="fas fa-mobile-alt fa-3x text-info mb-3"></i>
-                        <h5>Easy Booking</h5>
-                        <p class="text-muted">User-friendly online platform for quick and hassle-free seat reservations from anywhere, anytime.</p>
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Smart Booking</h5>
+                        <p class="text-muted mb-0">
+                            User-friendly online platform for quick and hassle-free seat 
+                            reservations from anywhere, anytime.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -76,24 +101,24 @@
 </section>
 
 <!-- Stats Section -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-white">
     <div class="container">
         <div class="row text-center">
             <div class="col-md-3 mb-4">
-                <div class="stat-number text-primary">15+</div>
-                <p class="text-muted fw-bold">Modern Buses</p>
+                <div class="stat-number">15+</div>
+                <p class="text-muted fw-semibold fs-5">Modern Buses</p>
             </div>
             <div class="col-md-3 mb-4">
-                <div class="stat-number text-success">500+</div>
-                <p class="text-muted fw-bold">Daily Commuters</p>
+                <div class="stat-number">500+</div>
+                <p class="text-muted fw-semibold fs-5">Daily Commuters</p>
             </div>
             <div class="col-md-3 mb-4">
-                <div class="stat-number text-info">25+</div>
-                <p class="text-muted fw-bold">Coverage Routes</p>
+                <div class="stat-number">25+</div>
+                <p class="text-muted fw-semibold fs-5">Coverage Routes</p>
             </div>
             <div class="col-md-3 mb-4">
-                <div class="stat-number text-warning">99%</div>
-                <p class="text-muted fw-bold">On-Time Performance</p>
+                <div class="stat-number">99%</div>
+                <p class="text-muted fw-semibold fs-5">On-Time Performance</p>
             </div>
         </div>
     </div>
@@ -103,29 +128,29 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">How It Works</h2>
-            <p class="text-muted">Simple steps to ride with us</p>
+            <h2 class="fw-bold gradient-text mb-3">How It Works</h2>
+            <p class="text-muted fs-5">Simple steps to ride with us</p>
         </div>
         <div class="row text-center">
             <div class="col-md-4 mb-4">
-                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 80px; height: 80px;">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 100px; height: 100px;">
                     <i class="fas fa-user-plus fa-2x"></i>
                 </div>
-                <h5>1. Create Account</h5>
-                <p class="text-muted">Sign up with your UAP credentials</p>
+                <h5 class="fw-bold">1. Create Account</h5>
+                <p class="text-muted">Quick sign up with your UAP credentials</p>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 80px; height: 80px;">
+                <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 100px; height: 100px;">
                     <i class="fas fa-route fa-2x"></i>
                 </div>
-                <h5>2. Choose Route</h5>
+                <h5 class="fw-bold">2. Choose Route</h5>
                 <p class="text-muted">Select your preferred bus route and timing</p>
             </div>
             <div class="col-md-4 mb-4">
-                <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 80px; height: 80px;">
+                <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center text-white mb-3" style="width: 100px; height: 100px;">
                     <i class="fas fa-ticket-alt fa-2x"></i>
                 </div>
-                <h5>3. Book & Ride</h5>
+                <h5 class="fw-bold">3. Book & Ride</h5>
                 <p class="text-muted">Confirm your booking and enjoy the ride</p>
             </div>
         </div>
@@ -133,18 +158,21 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5" style="background: linear-gradient(135deg, var(--uap-blue) 0%, var(--uap-light-blue) 100%);">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Ready to Start Your Journey?</h2>
-                <p class="lead mb-4">Join thousands of UAP students and staff who trust our transportation system for their daily commute.</p>
+                <h2 class="fw-bold text-white mb-3">Ready to Start Your Journey?</h2>
+                <p class="lead text-white opacity-90 mb-4">
+                    Join thousands of UAP students and staff who trust our transportation system 
+                    for their daily campus commute.
+                </p>
                 {% if not user.is_authenticated %}
-                    <a href="/signup/" class="btn btn-light btn-lg">
+                    <a href="/signup/" class="btn btn-light btn-lg px-5 py-3 fw-semibold">
                         <i class="fas fa-user-plus me-2"></i>Create Your Account
                     </a>
                 {% else %}
-                    <a href="/booking/" class="btn btn-light btn-lg">
+                    <a href="/booking/" class="btn btn-light btn-lg px-5 py-3 fw-semibold">
                         <i class="fas fa-ticket-alt me-2"></i>Book Your Next Ride
                     </a>
                 {% endif %}
