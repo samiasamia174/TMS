@@ -12,37 +12,37 @@
 
 <div style="margin: 2rem 0;">
     <div class="grid grid-4">
-        <div class="card text-center">
+        <a href="/search-routes/" class="card text-center" style="text-decoration: none; color: inherit;">
             <div style="font-size: 2.5rem; color: #87CEEB; margin-bottom: 1rem;">
                 <i class="fas fa-route"></i>
             </div>
             <h3>Search Routes</h3>
             <p style="color: #666; margin-top: 0.5rem;">Find your perfect route</p>
-        </div>
+        </a>
         
-        <div class="card text-center">
+        <a href="/schedule/" class="card text-center" style="text-decoration: none; color: inherit;">
             <div style="font-size: 2.5rem; color: #B19CD9; margin-bottom: 1rem;">
                 <i class="fas fa-calendar-alt"></i>
             </div>
             <h3>View Schedule</h3>
             <p style="color: #666; margin-top: 0.5rem;">Check bus timings</p>
-        </div>
+        </a>
         
-        <div class="card text-center">
+        <a href="/profile/" class="card text-center" style="text-decoration: none; color: inherit;">
             <div style="font-size: 2.5rem; color: #9370DB; margin-bottom: 1rem;">
                 <i class="fas fa-user"></i>
             </div>
             <h3>My Profile</h3>
             <p style="color: #666; margin-top: 0.5rem;">Manage account</p>
-        </div>
+        </a>
         
-        <div class="card text-center">
+        <a href="/contact-us/" class="card text-center" style="text-decoration: none; color: inherit;">
             <div style="font-size: 2.5rem; color: #ADD8E6; margin-bottom: 1rem;">
                 <i class="fas fa-headset"></i>
             </div>
             <h3>Support</h3>
             <p style="color: #666; margin-top: 0.5rem;">Get help</p>
-        </div>
+        </a>
     </div>
 </div>
 
@@ -50,33 +50,40 @@
 
 <div class="grid grid-2">
     <div class="card">
-        <h2 style="margin-bottom: 1.5rem; color: #87CEEB;">Recent Routes</h2>
+        <h2 style="margin-bottom: 1.5rem; color: #87CEEB;">Today's Routes</h2>
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            {% for schedule in recent_schedules %}
             <div>
-                <div style="font-weight: bold; font-size: 1.1rem; color: #333;">Mirpur → Greenroad Campus</div>
-                <div style="color: #666; margin-top: 0.5rem;">08:00 AM - 08:45 AM</div>
+                <div style="font-weight: bold; font-size: 1.1rem; color: #333;">{{ schedule.route.route_name }}</div>
+                <div style="color: #666; margin-top: 0.5rem;">
+                    <i class="fas fa-bus"></i> {{ schedule.bus.bus_number }} | 
+                    <i class="fas fa-clock"></i> {{ schedule.departure_time }} - {{ schedule.arrival_time }} |
+                    <i class="fas fa-chair"></i> {{ schedule.available_seats }} seats
+                </div>
             </div>
-            <div>
-                <div style="font-weight: bold; font-size: 1.1rem; color: #333;">Dhanmondi → Greenroad Campus</div>
-                <div style="color: #666; margin-top: 0.5rem;">02:30 PM - 03:15 PM</div>
+            {% empty %}
+            <div style="text-align: center; padding: 2rem; color: #666;">
+                <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem; color: #87CEEB;"></i>
+                <p>No schedules for today</p>
             </div>
+            {% endfor %}
         </div>
     </div>
     
     <div class="card">
-        <h2 style="margin-bottom: 1.5rem; color: #B19CD9;">Travel Stats</h2>
+        <h2 style="margin-bottom: 1.5rem; color: #B19CD9;">Transportation Stats</h2>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
-                <span>Total Trips</span>
-                <strong style="color: #87CEEB;">12</strong>
+                <span>Total Routes</span>
+                <strong style="color: #87CEEB;">{{ total_routes }}</strong>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
-                <span>This Month</span>
-                <strong style="color: #B19CD9;">3</strong>
+                <span>Active Buses</span>
+                <strong style="color: #B19CD9;">{{ active_buses }}</strong>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
-                <span>Favorite Route</span>
-                <strong style="color: #9370DB;">Mirpur</strong>
+                <span>Today's Trips</span>
+                <strong style="color: #9370DB;">{{ recent_schedules|length }}</strong>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
                 <span>Member Since</span>
