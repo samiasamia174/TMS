@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - BusGo{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 2rem auto;">
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <h1>Welcome Back</h1>
+            <p style="color: var(--gray);">Sign in to your BusGo account</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+            <p style="color: var(--gray);">Don't have an account?</p>
+            <a href="/signup/" class="btn btn-secondary" style="width: 100%;">
+                <i class="fas fa-user-plus"></i> Create New Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

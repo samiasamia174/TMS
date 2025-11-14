@@ -1,7 +1,7 @@
 """
 Django settings for uap_tms project.
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,20 +24,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    #'django_extensions',
     # Our apps
     'accounts',
     #'buses',
     #'registrations',
     #'tracking',
     # Third party apps
-    'crispy_forms',
-    'crispy_bootstrap4',
+   # 'crispy_forms',
+   # 'crispy_bootstrap4',
     'buses',
     'tracking',
     'registrations',
     'tms_core',
-    'payments'
+    #'payments'
 ]
 
 MIDDLEWARE = [
@@ -55,18 +55,20 @@ ROOT_URLCONF = 'uap_tms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),  # Global templates directory
+        ],
+        'APP_DIRS': True,  # This should be True to look in app templates folders
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
             ],
         },
-    },
+},
+
 ]
 
 WSGI_APPLICATION = 'uap_tms.wsgi.application'
@@ -74,15 +76,8 @@ WSGI_APPLICATION = 'uap_tms.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'uap_tms_db',
-        'USER': 'root',
-        'PASSWORD': 'root123',  # Change this to your MySQL password
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -128,7 +123,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Login URLs
-LOGIN_URL = 'accounts:login'
+LOGIN_URL = 'buses:signin'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:home'
 
@@ -145,8 +140,25 @@ SESSION_SAVE_EVERY_REQUEST = True
 # Authentication settings
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = '/login/'
+LOGIN_URL = 'buses:signin'
 
 # Session settings
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+
+# Login settings
+LOGIN_URL = 'buses:signin'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'home'
+
+
+
+
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"

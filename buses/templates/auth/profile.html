@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - BusGo{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; overflow: hidden;">
+        <div style="position: relative; padding: 3rem 2rem;">
+            <!-- Background Pattern -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1;">
+                <div style="position: absolute; top: 20%; right: 10%; width: 100px; height: 100px; background: var(--accent); border-radius: 50%;"></div>
+                <div style="position: absolute; bottom: 30%; left: 15%; width: 150px; height: 150px; background: var(--success); border-radius: 50%;"></div>
+            </div>
+            
+            <div style="position: relative; z-index: 2; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <!-- Avatar -->
+                <div style="position: relative;">
+                    <div style="width: 120px; height: 120px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 4px solid rgba(255,255,255,0.3);">
+                        <i class="fas fa-user" style="color: white;"></i>
+                    </div>
+                    <div style="position: absolute; bottom: 5px; right: 5px; width: 30px; height: 30px; background: var(--success); border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-check" style="color: white; font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+                
+                <!-- User Info -->
+                <div style="flex: 1;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700;">
+                        {{ user.username }}
+                    </h1>
+                    <p style="opacity: 0.8; margin-bottom: 1rem; font-size: 1.1rem;">
+                        <i class="fas fa-envelope"></i> {{ user.email }}
+                    </p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                            <i class="fas fa-user-tag"></i> 
+                            {% if profile.user_type %}
+                                {{ profile.user_type|title }}
+                            {% else %}
+                                Traveler
+                            {% endif %}
+                        </span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                            <i class="fas fa-calendar-plus"></i> Joined {{ user.date_joined|date:"M Y" }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 1rem;">
+                    <a href="/dashboard/" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button onclick="document.getElementById('profileForm').scrollIntoView({behavior: 'smooth'})" class="btn" style="background: var(--accent); color: white;">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats & Quick Overview -->
+    <div class="grid grid-4" style="margin: 2rem 0; gap: 1.5rem;">
+        <div class="card text-center" style="border: none;">
+            <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem;">
+                <i class="fas fa-route"></i>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--dark);">12</div>
+            <div style="color: var(--gray); font-size: 0.9rem;">Total Trips</div>
+        </div>
+        
+        <div class="card text-center" style="border: none;">
+            <div style="font-size: 2.5rem; color: var(--success); margin-bottom: 0.5rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--dark);">8</div>
+            <div style="color: var(--gray); font-size: 0.9rem;">Completed</div>
+        </div>
+        
+        <div class="card text-center" style="border: none;">
+            <div style="font-size: 2.5rem; color: var(--warning); margin-bottom: 0.5rem;">
+                <i class="fas fa-star"></i>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--dark);">4.8</div>
+            <div style="color: var(--gray); font-size: 0.9rem;">Rating</div>
+        </div>
+        
+        <div class="card text-center" style="border: none;">
+            <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 0.5rem;">
+                <i class="fas fa-award"></i>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--dark);">Gold</div>
+            <div style="color: var(--gray); font-size: 0.9rem;">Member</div>
+        </div>
+    </div>
+
+    <div class="grid grid-2" style="gap: 2rem; margin: 2rem 0;">
+        <!-- Profile Form -->
+        <div class="card" style="border: none;" id="profileForm">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                <div style="width: 4px; height: 30px; background: linear-gradient(45deg, var(--primary), var(--accent)); border-radius: 2px;"></div>
+                <h2 style="margin: 0; font-size: 1.5rem;">
+                    <i class="fas fa-user-edit"></i> Edit Profile Information
+                </h2>
+            </div>
+
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label" for="phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input type="text" class="form-control" id="phone" name="phone" 
+                           value="{{ profile.phone|default:'' }}" 
+                           placeholder="Enter your phone number">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="address">
+                        <i class="fas fa-home"></i> Address
+                    </label>
+                    <input type="text" class="form-control" id="address" name="address" 
+                           value="{{ profile.address|default:'' }}" 
+                           placeholder="Enter your address">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="student_id">
+                        <i class="fas fa-id-card"></i> Student ID
+                    </label>
+                    <input type="text" class="form-control" id="student_id" name="student_id" 
+                           value="{{ profile.student_id|default:'' }}" 
+                           placeholder="Enter your student ID">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="user_type">
+                        <i class="fas fa-users"></i> User Type
+                    </label>
+                    <select class="form-control" id="user_type" name="user_type">
+                        <option value="student" {% if profile.user_type == 'student' %}selected{% endif %}>🎓 Student</option>
+                        <option value="staff" {% if profile.user_type == 'staff' %}selected{% endif %}>💼 Staff</option>
+                        <option value="authority" {% if profile.user_type == 'authority' %}selected{% endif %}>⚙️ Authority</option>
+                        <option value="regular" {% if profile.user_type == 'regular' %}selected{% endif %}>👤 Regular Traveler</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;">
+                    <i class="fas fa-save"></i> Update Profile
+                </button>
+            </form>
+        </div>
+
+        <!-- Account Information -->
+        <div class="card" style="border: none;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                <div style="width: 4px; height: 30px; background: linear-gradient(45deg, var(--success), var(--accent)); border-radius: 2px;"></div>
+                <h2 style="margin: 0; font-size: 1.5rem;">
+                    <i class="fas fa-info-circle"></i> Account Details
+                </h2>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: var(--light); border-radius: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: var(--dark);">Username</div>
+                        <div style="color: var(--gray); font-size: 0.9rem;">Your unique identifier</div>
+                    </div>
+                    <div style="font-weight: bold; color: var(--primary);">{{ user.username }}</div>
+                </div>
+                
+                <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: var(--light); border-radius: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: var(--dark);">Email Address</div>
+                        <div style="color: var(--gray); font-size: 0.9rem;">Primary contact email</div>
+                    </div>
+                    <div style="font-weight: bold; color: var(--primary);">{{ user.email }}</div>
+                </div>
+                
+                <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: var(--light); border-radius: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: var(--dark);">Member Since</div>
+                        <div style="color: var(--gray); font-size: 0.9rem;">Account creation date</div>
+                    </div>
+                    <div style="font-weight: bold; color: var(--success);">{{ user.date_joined|date:"M d, Y" }}</div>
+                </div>
+                
+                <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: var(--light); border-radius: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: var(--dark);">Account Status</div>
+                        <div style="color: var(--gray); font-size: 0.9rem;">Current account standing</div>
+                    </div>
+                    <div style="font-weight: bold; color: var(--success);">
+                        <i class="fas fa-check-circle"></i> Active
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.2rem;">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <a href="/dashboard/" class="btn btn-secondary" style="text-align: center;">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="/search-routes/" class="btn btn-secondary" style="text-align: center;">
+                        <i class="fas fa-search"></i> Find Routes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+    
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth animations to form elements
+        const formElements = document.querySelectorAll('.form-control');
+        formElements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                element.style.transition = 'all 0.5s ease';
+                element.style.opacity = '1';
+                element.style.transform = 'translateX(0)';
+            }, index * 100);
+        });
+        
+        // Add focus effects to form inputs
+        formElements.forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            element.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Bus Schedules</h2>
+    {# Booking management is intentionally not shown on the Find & Book page. Use Dashboard -> My Bookings instead. #}
+
+    <form method="get" class="row g-2 mb-3" id="schedules-filter-form">
+        <div class="col-md-4">
+            <select name="route" class="form-select">
+                <option value="">All routes</option>
+                {% for route in routes %}
+                <option value="{{ route.id }}" {% if route.id|stringformat:"s" == selected_route %}selected{% endif %}>{{ route.route_name }} ({{ route.start_point }} → {{ route.end_point }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="q" class="form-control" placeholder="Search by start/end or route" value="{{ q }}">
+        </div>
+        <div class="col-md-2">
+            <select name="time_range" class="form-select">
+                <option value="">Any time</option>
+                <option value="morning">Morning (05:00-11:59)</option>
+                <option value="afternoon">Afternoon (12:00-16:59)</option>
+                <option value="evening">Evening (17:00-22:59)</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="date" name="date" class="form-control" value="{{ selected_date }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div id="schedules-container">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Bus</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Available Seats</th>
+                    <th>Fare</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                <tr>
+                    <td>{{ schedule.bus.bus_number }} - {{ schedule.bus.bus_name }}</td>
+                    <td>{{ schedule.route.start_point }} to {{ schedule.route.end_point }}</td>
+                    <td>{{ schedule.date }}</td>
+                    <td>{{ schedule.departure_time }}</td>
+                    <td>{{ schedule.arrival_time }}</td>
+                    <td>{{ schedule.available_seats }}</td>
+                    <td>${{ schedule.route.fare }}</td>
+                    <td>
+                        {% if schedule.available_seats > 0 %}
+                        <a href="{% url 'book_bus' schedule.id %}" class="btn btn-primary btn-sm">Book Now</a>
+                        {% else %}
+                        <button class="btn btn-secondary btn-sm" disabled>Fully Booked</button>
+                        {% endif %}
+                    </td>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No schedules available</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <nav aria-label="Schedules pagination">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&route={{ selected_route }}&q={{ q }}&date={{ selected_date }}">Previous</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&route={{ selected_route }}&q={{ q }}&date={{ selected_date }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    </div>
+</div>
+<script>
+// AJAX-enhanced filtering: intercept form, fetch results and replace schedules container
+const filterForm = document.getElementById('schedules-filter-form');
+if (filterForm) {
+    filterForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const params = new URLSearchParams(new FormData(filterForm));
+        fetch(window.location.pathname + '?' + params.toString(), {headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then(resp => resp.text())
+            .then(html => {
+                // parse response and extract #schedules-container
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContainer = doc.getElementById('schedules-container');
+                if (newContainer) {
+                    const container = document.getElementById('schedules-container');
+                    container.innerHTML = newContainer.innerHTML;
+                } else {
+                    // fallback: reload full page
+                    window.location = window.location.pathname + '?' + params.toString();
+                }
+            }).catch(()=>{ window.location.reload(); });
+    });
+}
+</script>
+{% endblock %}
