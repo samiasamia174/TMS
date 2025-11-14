@@ -1,37 +1,100 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard - TMS</title>
-    <style>
-        body { font-family: Arial; margin: 0; padding: 20px; }
-        .header { background: #f8f9fa; padding: 20px; margin-bottom: 20px; }
-        .nav a { margin-right: 15px; text-decoration: none; }
-        .user-info { float: right; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Dashboard</h1>
-        <div class="user-info">
-            Welcome, <strong>{{ user.username }}</strong> |
-            <a href="{% url 'signout' %}">Logout</a>
-        </div>
-        <div class="nav">
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'dashboard' %}">Dashboard</a>
+cat > buses/templates/buses/dashboard.html << 'EOF'
+{% extends "base.html" %}
+
+{% block title %}Dashboard - UAP Transportation{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="card" style="background: linear-gradient(135deg, #1E3A8A, #9333EA); color: white;">
+        <div>
+            <h1 style="margin-bottom: 0.4rem; font-size: 1.4rem;">
+                Welcome back, {{ user.username }}
+            </h1>
+            <p style="opacity: 0.8; font-size: 0.85rem;">Here's your transportation overview</p>
         </div>
     </div>
+</div>
 
-    <div class="content">
-        <h2>Welcome to your Dashboard, {{ user.username }}!</h2>
-        <p>You have successfully logged in.</p>
+<div class="quick-actions" style="margin: 1.5rem 0;">
+    <div class="grid grid-4">
+        <div class="card text-center" style="text-decoration: none; color: inherit;">
+            <div style="font-size: 2rem; color: #1E3A8A; margin-bottom: 0.8rem;">
+                <i class="fas fa-route"></i>
+            </div>
+            <h4 style="font-size: 1rem;">Search Routes</h4>
+            <p style="color: #666; font-size: 0.8rem;">Find your perfect route</p>
+        </div>
 
-        <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0;">
-            <h3>User Information:</h3>
-            <p><strong>Username:</strong> {{ user.username }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Last Login:</strong> {{ user.last_login }}</p>
+        <div class="card text-center" style="text-decoration: none; color: inherit;">
+            <div style="font-size: 2rem; color: #9333EA; margin-bottom: 0.8rem;">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h4 style="font-size: 1rem;">View Schedule</h4>
+            <p style="color: #666; font-size: 0.8rem;">Check bus timings</p>
+        </div>
+
+        <div class="card text-center" style="text-decoration: none; color: inherit;">
+            <div style="font-size: 2rem; color: #4F46E5; margin-bottom: 0.8rem;">
+                <i class="fas fa-user"></i>
+            </div>
+            <h4 style="font-size: 1rem;">My Profile</h4>
+            <p style="color: #666; font-size: 0.8rem;">Manage account</p>
+        </div>
+
+        <div class="card text-center" style="text-decoration: none; color: inherit;">
+            <div style="font-size: 2rem; color: #6366F1; margin-bottom: 0.8rem;">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h4 style="font-size: 1rem;">Support</h4>
+            <p style="color: #666; font-size: 0.8rem;">Get help</p>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<hr style="margin: 2rem 0; border: none; border-top: 1px solid #e1e5e9;">
+
+<div class="dashboard-content">
+    <div class="grid grid-2">
+        <div class="card">
+            <h3 style="margin-bottom: 1.2rem; font-size: 1.1rem;">
+                Recent Routes
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <div style="font-weight: 600; font-size: 0.9rem;">Mirpur → Greenroad Campus</div>
+                    <div style="color: #666; font-size: 0.8rem;">08:00 AM - 08:45 AM</div>
+                </div>
+                <div>
+                    <div style="font-weight: 600; font-size: 0.9rem;">Dhanmondi → Greenroad Campus</div>
+                    <div style="color: #666; font-size: 0.8rem;">02:30 PM - 03:15 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 1.2rem; font-size: 1.1rem;">
+                Travel Stats
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <div style="display: flex; justify-content: between; align-items: center; font-size: 0.9rem;">
+                    <span>Total Trips</span>
+                    <strong style="color: #1E3A8A;">12</strong>
+                </div>
+                <div style="display: flex; justify-content: between; align-items: center; font-size: 0.9rem;">
+                    <span>This Month</span>
+                    <strong style="color: #9333EA;">3</strong>
+                </div>
+                <div style="display: flex; justify-content: between; align-items: center; font-size: 0.9rem;">
+                    <span>Favorite Route</span>
+                    <strong style="color: #4F46E5;">Mirpur</strong>
+                </div>
+                <div style="display: flex; justify-content: between; align-items: center; font-size: 0.9rem;">
+                    <span>Member Since</span>
+                    <strong style="color: #6366F1;">2025</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+EOF
