@@ -4,137 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}UAP Transportation{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #1E3A8A;
-            --secondary: #9333EA;
-            --accent: #4F46E5;
-            --light: #f8f9fa;
-            --dark: #333;
-            --gray: #666;
+            --uap-primary: #2c3e50;
+            --uap-secondary: #3498db;
+            --uap-accent: #e74c3c;
+            --uap-success: #27ae60;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--uap-primary) !important;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        
+        .btn-uap {
+            background: var(--uap-secondary);
             color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
         }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        .btn-uap:hover {
+            background: #2980b9;
+            color: white;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.5rem;
+        
+        .nav-link.active {
+            color: var(--uap-secondary) !important;
             font-weight: bold;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--uap-primary) 0%, var(--uap-secondary) 100%);
             color: white;
-            text-decoration: none;
-            font-weight: 500;
+            padding: 100px 0;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border: 1px solid #e1e5e9;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        
+        .feature-card {
             border: none;
-            cursor: pointer;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
-
-        .btn-primary {
-            background: var(--primary);
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer {
+            background: var(--uap-primary);
             color: white;
         }
-
-        .grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-
-        .text-center {
-            text-align: center;
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
         }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-content">
-            <div class="logo">
-                <img src="/static/images/uap-logo.png" alt="UAP Logo" style="height: 40px; width: auto;">
-                <span>UAP Transportation</span>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-bus"></i> UAP Transportation
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/buses/' in request.path %}active{% endif %}" href="/buses/">Buses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/routes/' in request.path %}active{% endif %}" href="/routes/">Routes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/booking/' in request.path %}active{% endif %}" href="/booking/">Booking</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item {% if '/dashboard/' in request.path %}active{% endif %}" href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item {% if '/profile/' in request.path %}active{% endif %}" href="/profile/"><i class="fas fa-user-circle"></i> Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/sign-out/"><i class="fas fa-sign-out-alt"></i> Sign Out</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/signin/' in request.path %}active{% endif %}" href="/signin/"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-uap ms-2" href="/signup/"><i class="fas fa-user-plus"></i> Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
-            <ul class="nav-links">
-                <li><a href="/dashboard/"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="/search-routes/"><i class="fas fa-route"></i> Routes</a></li>
-                <li><a href="/schedule/"><i class="fas fa-calendar-alt"></i> Schedule</a></li>
-                <li><a href="/profile/"><i class="fas fa-user"></i> Profile</a></li>
-            </ul>
         </div>
     </nav>
 
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
     </div>
+    {% endif %}
 
-    <script>
-        // Any JavaScript functionality can be added here
-    </script>
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-bus"></i> UAP Transportation</h5>
+                    <p>Your reliable campus transportation solution. Safe, efficient, and convenient bus services for University of Asia Pacific students and staff.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6>Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-light">Home</a></li>
+                        <li><a href="/buses/" class="text-light">Buses</a></li>
+                        <li><a href="/routes/" class="text-light">Routes</a></li>
+                        <li><a href="/booking/" class="text-light">Booking</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Contact Info</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt"></i> UAP Campus, Dhaka</li>
+                        <li><i class="fas fa-phone"></i> +880 XXXX-XXXXXX</li>
+                        <li><i class="fas fa-envelope"></i> transport@uap.edu.bd</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Operating Hours</h6>
+                    <ul class="list-unstyled">
+                        <li>Monday - Friday: 7:00 AM - 8:00 PM</li>
+                        <li>Saturday: 8:00 AM - 6:00 PM</li>
+                        <li>Sunday: Closed</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p>&copy; 2025 University of Asia Pacific - Transportation System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
-EOF

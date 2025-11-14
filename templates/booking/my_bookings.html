@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings - UAP Transportation{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <h1 class="fw-bold mb-3">My Bookings</h1>
+            <p class="lead text-muted">Manage your bus reservations.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">{{ booking.schedule.bus.bus_number }}</h5>
+                            <p class="text-muted mb-0">{{ booking.schedule.route.name }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><strong>Seat</strong></p>
+                            <p class="mb-0">#{{ booking.seat_number }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><strong>Date</strong></p>
+                            <p class="mb-0">{{ booking.booking_date|date:"M d, Y" }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><strong>Time</strong></p>
+                            <p class="mb-0">{{ booking.schedule.departure_time }}</p>
+                        </div>
+                        <div class="col-md-2">
+                            <p class="mb-1"><strong>Status</strong></p>
+                            <span class="badge {% if booking.status == 'confirmed' %}bg-success{% elif booking.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ booking.status|title }}
+                            </span>
+                        </div>
+                        <div class="col-md-1">
+                            {% if booking.status == 'confirmed' %}
+                            <form method="post" action="{% url 'cancel_booking' booking.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                        onclick="return confirm('Are you sure you want to cancel this booking?')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i>
+                You don't have any bookings yet. 
+                <a href="{% url 'booking' %}" class="alert-link">Book your first ride!</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'booking' %}" class="btn btn-uap">
+                <i class="fas fa-plus me-2"></i>Book New Ride
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

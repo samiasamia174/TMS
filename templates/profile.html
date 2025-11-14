@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - UAP Transportation{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">User Profile</h1>
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email|default:"Not set" }}</p>
+            <p><strong>Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

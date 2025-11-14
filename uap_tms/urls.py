@@ -1,38 +1,41 @@
 from django.contrib import admin
-from django.urls import path
-from django.shortcuts import redirect
-from django.views.generic import RedirectView
-from buses import views
+from django.urls import path, include
+from django.shortcuts import render
+
+# Simple views for main pages
+def home(request):
+    return render(request, 'home.html')
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+def profile(request):
+    return render(request, 'profile.html')
+
+def buses_list(request):
+    return render(request, 'buses/list.html')
+
+def routes_list(request):
+    return render(request, 'routes/list.html')
+
+def booking_list(request):
+    return render(request, 'booking/list.html')
+
+def payment_list(request):
+    return render(request, 'payment/list.html')
 
 urlpatterns = [
-    path("schedule/", lambda request: redirect("search_routes")),
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
     
-    # Fix for broken signup links
-    path('"/signup//"', RedirectView.as_view(url='/signup/', permanent=False)),
-    path('%22/signup//%22', RedirectView.as_view(url='/signup/', permanent=False)),
+    # Main pages - direct views
+    path('', home, name='home'),
+    path('dashboard/', dashboard, name='dashboard'),
+    path('profile/', profile, name='profile'),
+    path('buses/', buses_list, name='buses'),
+    path('routes/', routes_list, name='routes'),
+    path('booking/', booking_list, name='booking'),
+    path('payment/', payment_list, name='payment'),
     
-    # Authentication URLs
-    path('signup/', views.signup, name='signup'),
-    path('signin/', views.signin, name='signin'),
-    path('sign-out/', views.sign_out, name='sign_out'),
-    path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/', views.profile, name='profile'),
-    
-    # Authority Panel URLs
-    path('authority-panel/', views.authority_panel, name='authority_panel'),
-    path('authority/buses/', views.manage_buses, name='manage_buses'),
-    path('authority/routes/', views.manage_routes, name='manage_routes'),
-    path('authority/schedules/', views.manage_schedules, name='manage_schedules'),
-    path('authority/bookings/', views.view_bookings, name='view_bookings'),
-    
-    # Bus Registration URLs
-    path('bus-registration/', views.bus_registration, name='bus_registration'),
-    path('search-routes/', views.search_routes, name='search_routes'),
-    path('search-results/', views.search_results, name='search_results'),
-    path('select-bus/', views.select_bus, name='select_bus'),
-    path('make-payment/', views.make_payment, name='make_payment'),
-    path('confirmation/', views.confirmation, name='confirmation'),
-    path('contact-us/', views.contact_us, name='contact_us'),
+    # Auth pages - include from buses app
+    path('', include('buses.urls')),
 ]
