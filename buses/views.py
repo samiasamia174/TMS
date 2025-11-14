@@ -1,32 +1,21 @@
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from .models import *
+from buses.models import UserProfile, Schedule
 from datetime import date
 
 User = get_user_model()
 
-# =============================================
-# BASIC VIEWS
-# =============================================
-
 def home(request):
-    """Home page view"""
+    """Home page"""
     return render(request, 'home.html')
 
 def bus_schedule(request):
     """Bus schedule page"""
-    # Get today's schedules
-    today = date.today()
-    schedules = Schedule.objects.filter(date=today).select_related('bus', 'route')
-    
-    context = {
-        'schedules': schedules
-    }
-    return render(request, 'buses/schedule.html', context)
+    schedules = Schedule.objects.all() if hasattr(Schedule, 'objects') else []
+    return render(request, 'buses/schedule.html', {'schedules': schedules})
 
 def search_results(request):
     """Search results page"""
@@ -34,37 +23,27 @@ def search_results(request):
 
 def bus_registration(request):
     """Bus registration page"""
-    return render(request, 'bus/registration.html')
+    return render(request, 'buses/bus_registration.html')
 
 def confirmation(request):
     """Confirmation page"""
-    return render(request, 'confirmation.html')
+    return render(request, 'buses/confirmation.html')
 
 def contact_us(request):
     """Contact us page"""
-    return render(request, 'contact_us.html')
+    return render(request, 'buses/contact_us.html')
 
 def search_routes(request):
     """Search routes page"""
-    # Get all active routes
-    routes = Route.objects.filter(is_active=True)
-    
-    context = {
-        'routes': routes
-    }
-    return render(request, 'buses/search_routes.html', context)
+    return render(request, 'buses/search_routes.html')
 
 def select_bus(request):
     """Select bus page"""
-    return render(request, 'bus/select_bus.html')
+    return render(request, 'buses/select_bus.html')
 
 def make_payment(request):
     """Make payment page"""
-    return render(request, 'bus/payment.html')
-
-# =============================================
-# AUTHENTICATION VIEWS
-# =============================================
+    return render(request, 'buses/make_payment.html')
 
 def signup(request):
     """User registration"""
@@ -106,7 +85,7 @@ def signup(request):
             )
 
             messages.success(request, 'Account created successfully! Please sign in.')
-            return redirect('buses:signin')
+            return redirect('signin')
 
         except Exception as e:
             messages.error(request, f'Error creating account: {str(e)}')
@@ -125,7 +104,7 @@ def signin(request):
         if user is not None:
             login(request, user)
             messages.success(request, f'Welcome back, {user.username}!')
-            return redirect('buses:dashboard')
+            return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password!')
 
@@ -135,228 +114,46 @@ def sign_out(request):
     """User logout"""
     logout(request)
     messages.success(request, 'You have been successfully signed out!')
-    return redirect('buses:home')
+    return redirect('dashboard')
 
-# =============================================
-# USER PROFILE AND DASHBOARD
-# =============================================
-
-@login_required
 def dashboard(request):
     """User dashboard"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-    except UserProfile.DoesNotExist:
-        user_profile = UserProfile.objects.create(user=request.user, user_type='student')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/dashboard.html', {'user': request.user})
 
-    # Get today's schedules for the dashboard
-    today = date.today()
-    recent_schedules = Schedule.objects.filter(date=today).select_related('bus', 'route')[:5]
-    
-    # Get route statistics
-    total_routes = Route.objects.count()
-    active_buses = Bus.objects.filter(is_active=True).count()
-
-    context = {
-        'user_profile': user_profile,
-        'recent_schedules': recent_schedules,
-        'total_routes': total_routes,
-        'active_buses': active_buses
-    }
-    return render(request, 'buses/dashboard.html', context)
-
-@login_required
 def profile(request):
-    """User profile management"""
-    try:
-        profile_obj = UserProfile.objects.get(user=request.user)
-    except UserProfile.DoesNotExist:
-        profile_obj = UserProfile.objects.create(user=request.user, user_type='student')
+    """User profile"""
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/profile.html', {'user': request.user})
 
-    if request.method == 'POST':
-        profile_obj.phone = request.POST.get('phone', '')
-        profile_obj.address = request.POST.get('address', '')
-        profile_obj.student_id = request.POST.get('student_id', '')
-        profile_obj.user_type = request.POST.get('user_type', 'student')
-        profile_obj.save()
-
-        messages.success(request, 'Profile updated successfully!')
-        return redirect('buses:profile')
-
-    return render(request, 'auth/profile.html', {'profile': profile_obj})
-
-# =============================================
-# AUTHORITY PANEL VIEWS
-# =============================================
-
-@login_required
 def authority_panel(request):
     """Authority panel"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.user_type != 'authority':
-            messages.error(request, 'Access denied! Authority panel only.')
-            return redirect('buses:dashboard')
-    except UserProfile.DoesNotExist:
-        messages.error(request, 'Access denied! Please complete your profile.')
-        return redirect('buses:profile')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/authority_panel.html', {'user': request.user})
 
-    total_buses = Bus.objects.count()
-    active_buses = Bus.objects.filter(is_active=True).count()
-    total_routes = Route.objects.count()
-    total_bookings = Booking.objects.count()
-    active_bookings = Booking.objects.filter(is_confirmed=True).count()
-
-    recent_bookings = Booking.objects.select_related('user', 'schedule').order_by('-booking_date')[:10]
-
-    context = {
-        'total_buses': total_buses,
-        'active_buses': active_buses,
-        'total_routes': total_routes,
-        'total_bookings': total_bookings,
-        'active_bookings': active_bookings,
-        'recent_bookings': recent_bookings,
-    }
-    return render(request, 'authority/panel.html', context)
-
-@login_required
 def manage_buses(request):
     """Manage buses"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.user_type != 'authority':
-            return redirect('buses:dashboard')
-    except UserProfile.DoesNotExist:
-        return redirect('buses:dashboard')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/manage_buses.html', {'user': request.user})
 
-    buses = Bus.objects.all()
-
-    if request.method == 'POST':
-        bus_number = request.POST.get('bus_number')
-        bus_name = request.POST.get('bus_name')
-        capacity = request.POST.get('capacity')
-        driver_name = request.POST.get('driver_name')
-        driver_contact = request.POST.get('driver_contact')
-
-        if Bus.objects.filter(bus_number=bus_number).exists():
-            messages.error(request, 'Bus with this number already exists!')
-        else:
-            Bus.objects.create(
-                bus_number=bus_number,
-                bus_name=bus_name,
-                capacity=capacity,
-                driver_name=driver_name,
-                driver_contact=driver_contact
-            )
-            messages.success(request, 'Bus added successfully!')
-
-        return redirect('buses:manage_buses')
-
-    return render(request, 'authority/manage_buses.html', {'buses': buses})
-
-@login_required
 def manage_routes(request):
     """Manage routes"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.user_type != 'authority':
-            return redirect('buses:dashboard')
-    except UserProfile.DoesNotExist:
-        return redirect('buses:dashboard')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/manage_routes.html', {'user': request.user})
 
-    routes = Route.objects.all()
-
-    if request.method == 'POST':
-        route_name = request.POST.get('route_name')
-        start_point = request.POST.get('start_point')
-        end_point = request.POST.get('end_point')
-        stops = request.POST.get('stops')
-        distance = request.POST.get('distance')
-        estimated_time = request.POST.get('estimated_time')
-        fare = request.POST.get('fare')
-
-        Route.objects.create(
-            route_name=route_name,
-            start_point=start_point,
-            end_point=end_point,
-            stops=stops,
-            distance=distance,
-            estimated_time=estimated_time,
-            fare=fare
-        )
-        messages.success(request, 'Route added successfully!')
-        return redirect('buses:manage_routes')
-
-    return render(request, 'authority/manage_routes.html', {'routes': routes})
-
-@login_required
 def manage_schedules(request):
     """Manage schedules"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.user_type != 'authority':
-            return redirect('buses:dashboard')
-    except UserProfile.DoesNotExist:
-        return redirect('buses:dashboard')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/manage_schedules.html', {'user': request.user})
 
-    schedules = Schedule.objects.select_related('bus', 'route').all()
-    buses = Bus.objects.filter(is_active=True)
-    routes = Route.objects.all()
-
-    if request.method == 'POST':
-        bus_id = request.POST.get('bus')
-        route_id = request.POST.get('route')
-        departure_time = request.POST.get('departure_time')
-        arrival_time = request.POST.get('arrival_time')
-        date = request.POST.get('date')
-
-        bus = Bus.objects.get(id=bus_id)
-        route = Route.objects.get(id=route_id)
-
-        Schedule.objects.create(
-            bus=bus,
-            route=route,
-            departure_time=departure_time,
-            arrival_time=arrival_time,
-            date=date,
-            available_seats=bus.capacity
-        )
-        messages.success(request, 'Schedule added successfully!')
-        return redirect('buses:manage_schedules')
-
-    context = {
-        'schedules': schedules,
-        'buses': buses,
-        'routes': routes
-    }
-    return render(request, 'authority/manage_schedules.html', context)
-
-@login_required
 def view_bookings(request):
     """View bookings"""
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.user_type != 'authority':
-            return redirect('buses:dashboard')
-    except UserProfile.DoesNotExist:
-        return redirect('buses:dashboard')
-
-    bookings = Booking.objects.select_related('user', 'schedule').order_by('-booking_date')
-    return render(request, 'authority/view_bookings.html', {'bookings': bookings})
-
-
-def signin(request):
-    from django.contrib.auth import authenticate, login
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('buses:dashboard')
-        else:
-            return render(request, 'buses/signin.html', {'error': 'Invalid credentials'})
-    return render(request, 'buses/signin.html')
-
-def search_results(request):
-    return render(request, 'bus/search_results.html')
+    if not request.user.is_authenticated:
+        return redirect('signin')
+    return render(request, 'buses/view_bookings.html', {'user': request.user})
