@@ -342,3 +342,18 @@ def view_bookings(request):
 
     bookings = Booking.objects.select_related('user', 'schedule').order_by('-booking_date')
     return render(request, 'authority/view_bookings.html', {'bookings': bookings})
+
+
+def signin(request):
+    from django.contrib.auth import authenticate, login
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('buses:dashboard')
+        else:
+            return render(request, 'buses/signin.html', {'error': 'Invalid credentials'})
+    return render(request, 'buses/signin.html')
+

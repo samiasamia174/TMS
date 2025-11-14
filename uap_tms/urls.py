@@ -9,4 +9,5 @@ urlpatterns = [
     path('dashboard/', RedirectView.as_view(url='/'), name='dashboard'),  # Temporary
     path('accounts/', include('accounts.urls')),  # If you have accounts app
     path('payments/', include('payments.urls')),  # If you have payments app
+
 ]
