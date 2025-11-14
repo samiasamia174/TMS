@@ -59,6 +59,7 @@
     background-clip: text;
 }
 
+/* scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
