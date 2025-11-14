@@ -1,28 +1,34 @@
-<!-- payments/templates/payments/receipt_email.html -->
+<!-- TMS/payments/templates/payments/receipt_email.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Payment Receipt</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .receipt { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { color: #2c3e50; }
+        .info { margin: 15px 0; }
+        .info strong { display: inline-block; width: 150px; }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6;">
-    <div style="max-width: 600px; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
-        <h2 style="color: #2c3e50; text-align: center;">University Transportation System</h2>
-        <h3 style="text-align: center; color: #27ae60;">✅ Payment Receipt</h3>
-        <p>Dear <strong>{{ student_name }}</strong>,</p>
-        <p>Your payment has been successfully processed.</p>
-        <hr>
-        <ul>
-            <li><strong>Student ID:</strong> {{ student_id }}</li>
-            <li><strong>Vehicle Type:</strong> {{ vehicle_type }}</li>
-            <li><strong>Amount Paid:</strong> {{ amount }} BDT</li>
-            <li><strong>Email:</strong> {{ email }}</li>
-        </ul>
-        <hr>
-        <p>Thank you for using the University Transport Service!</p>
-        <p style="font-size: 0.9em; color: #7f8c8d;">
-            This is an automated message. Please do not reply.
-        </p>
+<body>
+    <div class="receipt">
+        <div class="header">
+            <h2>University Transportation System</h2>
+            <p><strong>Payment Receipt</strong></p>
+        </div>
+
+        <div class="info"><strong>Student Name:</strong> {{ student_name }}</div>
+        <div class="info"><strong>Student ID:</strong> {{ student_id }}</div>
+        <div class="info"><strong>Vehicle Type:</strong> {{ vehicle_type }}</div>
+        <div class="info"><strong>Amount Paid:</strong> {{ amount }} BDT</div>
+        <div class="info"><strong>Email:</strong> {{ email }}</div>
+
+        <hr style="margin: 20px 0;">
+        <p>Thank you for your payment! Your transport request is confirmed.</p>
+        <p><small>This is an auto-generated receipt. Please do not reply.</small></p>
     </div>
 </body>
 </html>

@@ -1,4 +1,8 @@
 from django.db import models
+
+
+# Create your models here.
+
 from django.conf import settings
 import uuid
 from django.utils import timezone
@@ -144,4 +148,39 @@ class MonthlySubscription(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        return f'{self.user.username} - {self.user_type}'
+
+
+class Booking(models.Model):
+    PAYMENT_STATUS = (
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
+    )
+
+    booking_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE)
+    booking_date = models.DateTimeField(auto_now_add=True)
+    passengers = models.IntegerField(default=1)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default='pending')
+    is_confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Booking {self.booking_id} - {self.user.username}'
+
+
+class Payment(models.Model):
+    booking = models.ForeignKey('Booking', on_delete=models.CASCADE)
+    transaction_id = models.CharField(max_length=100, unique=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=50, default='bkash')
+    payment_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='pending')
+
+    def __str__(self):
+        return f'Payment {self.transaction_id} - {self.amount}'
+
         return f'Subscription {self.subscription_id} - {self.user.username} ({self.schedule})'
