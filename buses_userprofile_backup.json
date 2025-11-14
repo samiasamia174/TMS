@@ -1,0 +1,14 @@
+[
+{
+  "model": "buses.userprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "user_type": "student",
+    "student_id": "",
+    "phone": "",
+    "address": "",
+    "created_at": "2025-11-13T18:06:20.161Z"
+  }
+}
+]

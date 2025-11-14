@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from .models import *
+from datetime import date
 
 User = get_user_model()
 
@@ -17,7 +18,14 @@ def home(request):
 
 def bus_schedule(request):
     """Bus schedule page"""
-    return render(request, 'buses/schedule.html')
+    # Get today's schedules
+    today = date.today()
+    schedules = Schedule.objects.filter(date=today).select_related('bus', 'route')
+    
+    context = {
+        'schedules': schedules
+    }
+    return render(request, 'buses/schedule.html', context)
 
 def search_results(request):
     """Search results page"""
@@ -37,7 +45,13 @@ def contact_us(request):
 
 def search_routes(request):
     """Search routes page"""
-    return render(request, 'bus/search_routes.html')
+    # Get all active routes
+    routes = Route.objects.filter(is_active=True)
+    
+    context = {
+        'routes': routes
+    }
+    return render(request, 'buses/search_routes.html', context)
 
 def select_bus(request):
     """Select bus page"""
@@ -134,8 +148,19 @@ def dashboard(request):
     except UserProfile.DoesNotExist:
         user_profile = UserProfile.objects.create(user=request.user, user_type='student')
 
+    # Get today's schedules for the dashboard
+    today = date.today()
+    recent_schedules = Schedule.objects.filter(date=today).select_related('bus', 'route')[:5]
+    
+    # Get route statistics
+    total_routes = Route.objects.count()
+    active_buses = Bus.objects.filter(is_active=True).count()
+
     context = {
-        'user_profile': user_profile
+        'user_profile': user_profile,
+        'recent_schedules': recent_schedules,
+        'total_routes': total_routes,
+        'active_buses': active_buses
     }
     return render(request, 'buses/dashboard.html', context)
 
