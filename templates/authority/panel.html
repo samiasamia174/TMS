@@ -1,123 +1,51 @@
-﻿{% extends 'base.html' %}
-
-{% block content %}
-<div class=\"container-fluid mt-4\">
-    <div class=\"row\">
-        <div class=\"col-md-12\">
-            <h2 class=\"mb-4\">🚌 Authority Panel - Transport Management</h2>
-            
-            <!-- Statistics Cards -->
-            <div class=\"row mb-4\">
-                <div class=\"col-md-2\">
-                    <div class=\"card text-white bg-primary\">
-                        <div class=\"card-body\">
-                            <h4 class=\"card-title\">{{ total_buses }}</h4>
-                            <p class=\"card-text\">Total Buses</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=\"col-md-2\">
-                    <div class=\"card text-white bg-success\">
-                        <div class=\"card-body\">
-                            <h4 class=\"card-title\">{{ active_buses }}</h4>
-                            <p class=\"card-text\">Active Buses</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=\"col-md-2\">
-                    <div class=\"card text-white bg-info\">
-                        <div class=\"card-body\">
-                            <h4 class=\"card-title\">{{ total_routes }}</h4>
-                            <p class=\"card-text\">Routes</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=\"col-md-2\">
-                    <div class=\"card text-white bg-warning\">
-                        <div class=\"card-body\">
-                            <h4 class=\"card-title\">{{ total_bookings }}</h4>
-                            <p class=\"card-text\">Total Bookings</p>
-                        </div>
-                    </div>
-                </div>
-                <div class=\"col-md-2\">
-                    <div class=\"card text-white bg-danger\">
-                        <div class=\"card-body\">
-                            <h4 class=\"card-title\">{{ active_bookings }}</h4>
-                            <p class=\"card-text\">Active Bookings</p>
-                        </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authority Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Authority Panel</a>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h1>Authority Panel</h1>
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Buses</h5>
+                        <a href="/authority/buses/" class="btn btn-primary">Go to Buses</a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Quick Actions -->
-            <div class=\"row mb-4\">
-                <div class=\"col-md-12\">
-                    <div class=\"card\">
-                        <div class=\"card-header\">
-                            <h5 class=\"mb-0\">Quick Actions</h5>
-                        </div>
-                        <div class=\"card-body\">
-                            <div class=\"btn-group\" role=\"group\">
-                                <a href=\"{% url 'manage_buses' %}\" class=\"btn btn-primary\">Manage Buses</a>
-                                <a href=\"{% url 'manage_routes' %}\" class=\"btn btn-success\">Manage Routes</a>
-                                <a href=\"{% url 'manage_schedules' %}\" class=\"btn btn-info\">Manage Schedules</a>
-                                <a href=\"{% url 'view_bookings' %}\" class=\"btn btn-warning\">View Bookings</a>
-                            </div>
-                        </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Routes</h5>
+                        <a href="/authority/routes/" class="btn btn-primary">Go to Routes</a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Recent Bookings -->
-            <div class=\"row\">
-                <div class=\"col-md-12\">
-                    <div class=\"card\">
-                        <div class=\"card-header\">
-                            <h5 class=\"mb-0\">Recent Bookings</h5>
-                        </div>
-                        <div class=\"card-body\">
-                            {% if recent_bookings %}
-                            <div class=\"table-responsive\">
-                                <table class=\"table table-striped\">
-                                    <thead>
-                                        <tr>
-                                            <th>Booking ID</th>
-                                            <th>User</th>
-                                            <th>Bus</th>
-                                            <th>Route</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for booking in recent_bookings %}
-                                        <tr>
-                                            <td>{{ booking.booking_id|slice:':8' }}...</td>
-                                            <td>{{ booking.user.username }}</td>
-                                            <td>{{ booking.schedule.bus.bus_number }}</td>
-                                            <td>{{ booking.schedule.route.route_name }}</td>
-                                            <td>{{ booking.booking_date|date:'M d, Y H:i' }}</td>
-                                            <td>
-                                                {% if booking.is_confirmed %}
-                                                <span class=\"badge bg-success\">Confirmed</span>
-                                                {% else %}
-                                                <span class=\"badge bg-warning\">Pending</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {% else %}
-                            <p class=\"text-muted\">No bookings yet.</p>
-                            {% endif %}
-                        </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Schedules</h5>
+                        <a href="/authority/schedules/" class="btn btn-primary">Go to Schedules</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">View Bookings</h5>
+                        <a href="/authority/bookings/" class="btn btn-primary">View Bookings</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>

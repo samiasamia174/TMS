@@ -12,7 +12,7 @@ class Bus(models.Model):
     bus_number = models.CharField(max_length=20, unique=True)
     bus_name = models.CharField(max_length=100)
     capacity = models.IntegerField(default=40)
-
+    driver_name = models.CharField(max_length=100, default='Driver Name')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
