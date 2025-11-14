@@ -18,57 +18,26 @@
                         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                         {% endfor %}
                         {% endif %}
-                        
                         <form method="post">
                             {% csrf_token %}
-                            
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username *</label>
                                 <input type="text" name="username" class="form-control" required>
                             </div>
-                            
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email *</label>
                                 <input type="email" name="email" class="form-control" required>
                             </div>
-                            
                             <div class="mb-3">
                                 <label for="password1" class="form-label">Password *</label>
                                 <input type="password" name="password1" class="form-control" required>
                             </div>
-                            
                             <div class="mb-3">
                                 <label for="password2" class="form-label">Confirm Password *</label>
                                 <input type="password" name="password2" class="form-control" required>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="user_type" class="form-label">User Type</label>
-                                <select name="user_type" class="form-control">
-                                    <option value="student">Student</option>
-                                    <option value="faculty">Faculty</option>
-                                    <option value="staff">Staff</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Phone</label>
-                                <input type="text" name="phone" class="form-control">
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Address</label>
-                                <textarea name="address" class="form-control" rows="2"></textarea>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="student_id" class="form-label">Student ID (if student)</label>
-                                <input type="text" name="student_id" class="form-control">
-                            </div>
-                            
                             <button type="submit" class="btn btn-primary w-100">Sign Up</button>
                         </form>
-                        
                         <div class="text-center mt-3">
                             <p>Already have an account? <a href="/signin/">Sign In</a></p>
                         </div>
