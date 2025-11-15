@@ -1,22 +1,33 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import RedirectView
 from buses import views
+from buses.views_booking import booking_list, route_schedules, book_seat, my_bookings, cancel_booking
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     
-    # Fix for broken signup links
-    path('"/signup//"', RedirectView.as_view(url='/signup/', permanent=False)),
-    path('%22/signup//%22', RedirectView.as_view(url='/signup/', permanent=False)),
+    # Include apps
+    path('buses/', include('buses.urls')),
+    path('accounts/', include('accounts.urls')),
     
     # Authentication URLs
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('sign-out/', views.sign_out, name='sign_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/', views.profile, name='profile'),
+    
+    # Profile redirect - THIS IS THE KEY LINE
+    path('profile/', RedirectView.as_view(url='/accounts/profile/', permanent=False), name='profile'),
+    
+    # Direct URLs for routes and booking
+    path('routes/', views.route_list, name='routes'),
+    path('booking/', booking_list, name='booking'),
+    path('booking/route/<int:route_id>/', route_schedules, name='route_schedules'),
+    path('booking/book/<int:schedule_id>/', book_seat, name='book_seat'),
+    path('booking/my-bookings/', my_bookings, name='my_bookings'),
+    path('booking/cancel/<int:booking_id>/', cancel_booking, name='cancel_booking'),
     
     # Authority Panel URLs
     path('authority-panel/', views.authority_panel, name='authority_panel'),
