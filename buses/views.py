@@ -157,3 +157,18 @@ def booking_view(request):
 def dashboard(request):
     """User dashboard view"""
     return render(request, 'dashboard.html')
+
+@login_required
+def simple_profile(request):
+    """Simple profile page that works without the accounts app dependencies"""
+    user = request.user
+    context = {
+        'user': user,
+        'username': user.username,
+        'email': user.email if user.email else 'Not set',
+        'date_joined': user.date_joined,
+    }
+    return render(request, 'auth/profile.html', context)
+
+def contact_us(request):
+    return render(request, 'contact.html')
