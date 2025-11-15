@@ -1,27 +1,54 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Routes - UAP Transportation{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="mb-4">Bus Routes</h1>
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">UAP to Farmgate</h5>
-                    <p class="card-text">Departure: 8:00 AM, 2:00 PM, 6:00 PM</p>
+    <h1 class="mb-4">🚌 Bus Routes</h1>
+    
+    {% if routes %}
+        <div class="row">
+            {% for route in routes %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ route.start_point }} → {{ route.end_point }}</h5>
+                        <p class="card-text">
+                            <strong>Fare:</strong> ৳{{ route.fare }}<br>
+                            <strong>Distance:</strong> {{ route.distance }} km<br>
+                            <strong>Time:</strong> {{ route.estimated_time }} min
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <small class="text-muted">
+                            {% if route.is_active %}
+                                <span class="text-success">● Active</span>
+                            {% else %}
+                                <span class="text-danger">● Inactive</span>
+                            {% endif %}
+                        </small>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">UAP to Dhanmondi</h5>
-                    <p class="card-text">Departure: 7:30 AM, 1:30 PM, 5:30 PM</p>
-                </div>
-            </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4>No routes available</h4>
+            <p>There are no bus routes configured at the moment.</p>
         </div>
-    </div>
+    {% endif %}
 </div>
+
+<style>
+.card {
+    transition: transform 0.2s;
+    border-left: 4px solid #007bff;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+</style>
 {% endblock %}

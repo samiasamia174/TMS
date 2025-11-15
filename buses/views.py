@@ -79,3 +79,77 @@ def sign_out(request):
 
 # Keep your existing views below this line
 # ... your other view functions ...
+
+# ===== BUS ROUTES VIEWS =====
+from .models import Route, Bus, Schedule
+
+def home(request):
+    """Home page with route overview"""
+    routes = Route.objects.filter(is_active=True).order_by('start_point')[:6]
+    routes_count = Route.objects.filter(is_active=True).count()
+    buses_count = Bus.objects.filter(is_active=True).count()
+    
+    context = {
+        'routes': routes,
+        'routes_count': routes_count,
+        'buses_count': buses_count
+    }
+    return render(request, 'home.html', context)
+
+def route_list(request):
+    """Display all bus routes"""
+    routes = Route.objects.filter(is_active=True).order_by('start_point')
+    context = {
+        'routes': routes
+    }
+    return render(request, 'routes/list.html', context)
+
+def bus_list(request):
+    """Display all buses"""
+    buses = Bus.objects.filter(is_active=True).order_by('bus_number')
+    context = {
+        'buses': buses
+    }
+    return render(request, 'buses/list.html', context)
+
+# ===== MAIN VIEWS =====
+def home(request):
+    """Home page with route overview"""
+    routes = Route.objects.filter(is_active=True).order_by('start_point')[:6]
+    routes_count = Route.objects.filter(is_active=True).count()
+    buses_count = Bus.objects.filter(is_active=True).count()
+    
+    context = {
+        'routes': routes,
+        'routes_count': routes_count,
+        'buses_count': buses_count
+    }
+    return render(request, 'home.html', context)
+
+def route_list(request):
+    """Display all bus routes"""
+    routes = Route.objects.filter(is_active=True).order_by('start_point')
+    context = {
+        'routes': routes
+    }
+    return render(request, 'routes/list.html', context)
+
+def bus_list(request):
+    """Display all buses"""
+    buses = Bus.objects.filter(is_active=True).order_by('bus_number')
+    context = {
+        'buses': buses
+    }
+    return render(request, 'buses/list.html', context)
+
+@login_required
+def booking_view(request):
+    """Booking page with routes and schedules"""
+    routes = Route.objects.filter(is_active=True).order_by('start_point')
+    schedules = Schedule.objects.filter(is_active=True).select_related('route', 'bus')
+    
+    context = {
+        'routes': routes,
+        'schedules': schedules
+    }
+    return render(request, 'booking/booking.html', context)
