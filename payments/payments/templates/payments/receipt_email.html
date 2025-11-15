@@ -1,35 +1,13 @@
-<!-- TMS/payments/templates/payments/receipt_email.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Payment Receipt</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .receipt { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h2 { color: #2c3e50; }
-        .info { margin: 15px 0; }
-        .info strong { display: inline-block; width: 180px; }
-    </style>
 </head>
 <body>
-    <div class="receipt">
-        <div class="header">
-            <h2>University Transportation System</h2>
-            <p><strong>Payment Receipt</strong></p>
-        </div>
-
-        <div class="info"><strong>Student Name:</strong> {{ student_name }}</div>
-        <div class="info"><strong>Student ID:</strong> {{ student_id }}</div>
-        <div class="info"><strong>Vehicle Type:</strong> {{ vehicle_type }}</div>
-        <div class="info"><strong>Amount Paid:</strong> {{ amount }} BDT</div>
-        <div class="info"><strong>Email:</strong> {{ email }}</div>
-        <div class="info"><strong>Transaction ID:</strong> {{ transaction_id }}</div> <!-- ✅ added -->
-
-        <hr style="margin: 20px 0;">
-        <p>Thank you for your payment! Your transport request is confirmed.</p>
-        <p><small>This is an auto-generated receipt. Please do not reply.</small></p>
-    </div>
+    <h2>✅ Payment Confirmed!</h2>
+    <p>Dear {{ student_name }},</p>
+    <p>Your payment of <strong>BDT {{ amount }}</strong> for {{ vehicle_type }} has been received.</p>
+    <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+    <p>Thank you for using University Transport!</p>
 </body>
 </html>
