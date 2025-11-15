@@ -1,4 +1,4 @@
-# tracking/urls.py - পুরো file replace করুন
+# tracking/urls.py - এইভাবে করুন
 
 from django.urls import path
 from . import views
