@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django_extensions',
-    'channels'
+    
     # Our apps
     'accounts',
     #'buses',
@@ -79,7 +79,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        ASGI_APPLICATION='uap_tms.asgi.application'
+        
     }
 }
 
@@ -165,9 +165,4 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-CHANNEL_LAYERS={
-    'default':{
-        'BACKEND':'channels.layers.
-InMemoryChannelLayer'
-    }
-}
+
