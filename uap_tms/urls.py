@@ -7,19 +7,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     
-    # Include buses app
-    path('buses/', include('buses.urls')),
-    
     # Authentication URLs
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('sign-out/', views.sign_out, name='sign_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
     
-    # Profile - use our simple profile
+    # Profile
     path('profile/', views.simple_profile, name='profile'),
     
-    # Direct URLs for routes and booking
+    # Direct URLs with consistent naming
+    path('buses/', views.bus_list, name='buses'),  # Changed from bus_list to buses
     path('routes/', views.route_list, name='routes'),
     path('booking/', booking_list, name='booking'),
     path('booking/route/<int:route_id>/', route_schedules, name='route_schedules'),
