@@ -1,230 +1,164 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.http import JsonResponse
-from .models import BusLocation, BusStatus, Notification
-from .forms import BusLocationForm, BusStatusForm, NotificationForm
-from buses.models import Bus
+# tracking/views.py - এই class টি যোগ করুন
 
-
-
-
-@login_required
-def live_tracking(request):
-    """Display live tracking map"""
-    buses = Bus.objects.filter(status='active')
-    
-    # Get latest location for each bus
-    bus_locations = []
-    for bus in buses:
-        try:
-            location = BusLocation.objects.filter(bus=bus, is_active=True).latest()
-            bus_locations.append({
-                'bus': bus,
-                'location': location,
-                'status': getattr(bus, 'current_status', None)
-            })
-        except BusLocation.DoesNotExist:
-            pass
-    
-    context = {
-        'bus_locations': bus_locations,
-    }
-    return render(request, 'tracking/live_tracking.html', context)
-
-@login_required
-def bus_tracking_detail(request, bus_id):
-    """Display detailed tracking for a specific bus"""
-    bus = get_object_or_404(Bus, id=bus_id)
-    
-    try:
-        current_location = BusLocation.objects.filter(bus=bus, is_active=True).latest()
-    except BusLocation.DoesNotExist:
-        current_location = None
-    
-    try:
-        bus_status = bus.current_status
-    except BusStatus.DoesNotExist:
-        bus_status = None
-    
-    notifications = Notification.objects.filter(bus=bus, is_active=True).order_by('-created_at')[:5]
-    location_history = BusLocation.objects.filter(bus=bus).order_by('-timestamp')[:20]
-    
-    context = {
-        'bus': bus,
-        'current_location': current_location,
-        'bus_status': bus_status,
-        'notifications': notifications,
-        'location_history': location_history,
-    }
-    return render(request, 'tracking/bus_tracking_detail.html', context)
-
-@login_required
-def get_bus_location_api(request, bus_id):
-    """API endpoint to get bus location (for AJAX updates)"""
-    bus = get_object_or_404(Bus, id=bus_id)
-    
-    try:
-        location = BusLocation.objects.filter(bus=bus, is_active=True).latest()
-        data = {
-            'success': True,
-            'latitude': float(location.latitude),
-            'longitude': float(location.longitude),
-            'speed': float(location.speed) if location.speed else 0,
-            'heading': float(location.heading) if location.heading else 0,
-            'timestamp': location.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-        }
-    except BusLocation.DoesNotExist:
-        data = {
-            'success': False,
-            'message': 'Location not available'
-        }
-    
-    return JsonResponse(data)
-
-# Authority Views
-@login_required
-def manage_tracking(request):
-    """Manage tracking (Authority only)"""
-    if request.user.user_type != 'authority':
-        messages.error(request, 'Access denied. Authority access required.')
-        return redirect('accounts:dashboard')
-    
-    buses = Bus.objects.filter(status='active')
-    bus_statuses = BusStatus.objects.all()
-    recent_locations = BusLocation.objects.filter(is_active=True).select_related('bus')[:20]
-    
-    context = {
-        'buses': buses,
-        'bus_statuses': bus_statuses,
-        'recent_locations': recent_locations,
-    }
-    return render(request, 'tracking/manage_tracking.html', context)
-
-@login_required
-def update_location(request):
-    """Update bus location (Authority only)"""
-    if request.user.user_type != 'authority':
-        messages.error(request, 'Access denied. Authority access required.')
-        return redirect('accounts:dashboard')
-    
-    if request.method == 'POST':
-        form = BusLocationForm(request.POST)
-        if form.is_valid():
-            # Deactivate previous locations for this bus
-            bus = form.cleaned_data['bus']
-            BusLocation.objects.filter(bus=bus).update(is_active=False)
-            
-            # Save new location
-            form.save()
-            messages.success(request, 'Location updated successfully!')
-            return redirect('tracking:manage_tracking')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = BusLocationForm()
-    
-    return render(request, 'tracking/location_form.html', {'form': form, 'title': 'Update Location'})
-
-@login_required
-def update_status(request, bus_id=None):
-    """Update bus status (Authority only)"""
-    if request.user.user_type != 'authority':
-        messages.error(request, 'Access denied. Authority access required.')
-        return redirect('accounts:dashboard')
-    
-    if bus_id:
-        bus = get_object_or_404(Bus, id=bus_id)
-        bus_status, created = BusStatus.objects.get_or_create(bus=bus)
-    else:
-        bus_status = None
-    
-    if request.method == 'POST':
-        form = BusStatusForm(request.POST, instance=bus_status)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Bus status updated successfully!')
-            return redirect('tracking:manage_tracking')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = BusStatusForm(instance=bus_status)
-    
-    return render(request, 'tracking/status_form.html', {'form': form, 'title': 'Update Status'})
-
-@login_required
-def create_notification(request):
-    """Create notification (Authority only)"""
-    if request.user.user_type != 'authority':
-        messages.error(request, 'Access denied. Authority access required.')
-        return redirect('accounts:dashboard')
-    
-    if request.method == 'POST':
-        form = NotificationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Notification created successfully!')
-            return redirect('tracking:manage_tracking')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = NotificationForm()
-    
-    return render(request, 'tracking/notification_form.html', {'form': form, 'title': 'Create Notification'})
-
-@login_required
-def notifications_list(request):
-    """View all notifications"""
-    notifications = Notification.objects.filter(is_active=True).order_by('-created_at')
-    
-    context = {
-        'notifications': notifications,
-    }
-
-    return render(request, 'tracking/notifications_list.html', context)
-
-
-
-
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
-from .models import Vehicle
+from django.http import JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from .models import Vehicle, Bus, BusLocation, BusStatus
+from django.utils import timezone
 import json
 
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdateLocationView(View):
     def post(self, request):
-        vehicle_id = request.POST.get('vehicle_id')
-        lat = float(request.POST.get('latitude'))
-        lng = float(request.POST.get('longitude'))
+        try:
+            # Support both form data and JSON
+            if request.content_type == 'application/json':
+                data = json.loads(request.body)
+            else:
+                data = request.POST
 
-        vehicle, created = Vehicle.objects.update_or_create(
-            vehicle_id=vehicle_id,
-            defaults={'latitude': lat, 'longitude': lng}
-        )
+            vehicle_id = data.get('vehicle_id')
+            lat = float(data.get('latitude', 0))
+            lng = float(data.get('longitude', 0))
+            speed = data.get('speed')
+            heading = data.get('heading')
 
-        # Broadcast update to WebSocket group
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "tracking",
-            {
-                "type": "send_location_update",
-                "data": {
-                    "vehicle_id": vehicle.vehicle_id,
-                    "name": vehicle.name,
-                    "latitude": lat,
-                    "longitude": lng,
+            # Validate data
+            if not vehicle_id:
+                return JsonResponse({"status": "error", "message": "Vehicle ID required"})
+
+            if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
+                return JsonResponse({"status": "error", "message": "Invalid coordinates"})
+
+            # Update Vehicle
+            vehicle, created = Vehicle.objects.update_or_create(
+                vehicle_id=vehicle_id,
+                defaults={
+                    'latitude': lat,
+                    'longitude': lng,
+                    'name': vehicle_id
                 }
+            )
+
+            # Update BusLocation if bus exists
+            bus_data = self.update_bus_location(vehicle_id, lat, lng, speed, heading)
+
+            # Broadcast to WebSocket groups
+            self.broadcast_location_update(vehicle_id, bus_data, lat, lng, speed, heading)
+
+            return JsonResponse({
+                "status": "success",
+                "bus_data": bus_data
+            })
+
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)})
+
+    def update_bus_location(self, vehicle_id, lat, lng, speed=None, heading=None):
+        """Update BusLocation for corresponding bus"""
+        try:
+            bus = Bus.objects.get(bus_number=vehicle_id)
+
+            # Deactivate previous locations
+            BusLocation.objects.filter(bus=bus).update(is_active=False)
+
+            # Create new location
+            BusLocation.objects.create(
+                bus=bus,
+                latitude=lat,
+                longitude=lng,
+                speed=speed,
+                heading=heading,
+                is_active=True,
+                timestamp=timezone.now()
+            )
+
+            # Update bus status last_updated
+            try:
+                bus_status = BusStatus.objects.get(bus=bus)
+                bus_status.last_updated = timezone.now()
+                bus_status.save()
+            except BusStatus.DoesNotExist:
+                pass
+
+            return {
+                'bus_id': bus.id,
+                'bus_number': bus.bus_number,
+                'exists': True
+            }
+
+        except Bus.DoesNotExist:
+            return {
+                'bus_id': None,
+                'bus_number': vehicle_id,
+                'exists': False
+            }
+
+    def broadcast_location_update(self, vehicle_id, bus_data, lat, lng, speed, heading):
+        """Broadcast location update to WebSocket groups"""
+        channel_layer = get_channel_layer()
+
+        update_data = {
+            "vehicle_id": vehicle_id,
+            "bus_id": bus_data.get('bus_id'),
+            "bus_number": bus_data.get('bus_number'),
+            "latitude": lat,
+            "longitude": lng,
+            "speed": speed,
+            "heading": heading,
+            "timestamp": timezone.now().isoformat()
+        }
+
+        # Broadcast to all tracking group
+        async_to_sync(channel_layer.group_send)(
+            "tracking_all",
+            {
+                "type": "location_update",
+                "data": update_data
             }
         )
-        return JsonResponse({"status": "success"})
 
-from django.shortcuts import render
+        # Broadcast to specific bus group if exists
+        if bus_data.get('bus_id'):
+            async_to_sync(channel_layer.group_send)(
+                f"bus_{bus_data['bus_id']}",
+                {
+                    "type": "location_update",
+                    "data": update_data
+                }
+            )
 
-def live_map(request):
-    return render(request, 'tracking/live_map.html')
+    # tracking/views.py - live_tracking function update করুন
+
+    @login_required
+    def live_tracking(request):
+        """Display live tracking map with WebSocket support"""
+        buses = Bus.objects.filter(status='active')
+
+        # Get latest location for each bus
+        bus_locations = []
+        for bus in buses:
+            try:
+                location = BusLocation.objects.filter(bus=bus, is_active=True).latest()
+                bus_status = getattr(bus, 'current_status', None)
+
+                bus_locations.append({
+                    'bus': bus,
+                    'location': location,
+                    'status': bus_status,
+                    'latitude': float(location.latitude),
+                    'longitude': float(location.longitude),
+                    'speed': float(location.speed) if location.speed else 0,
+                })
+            except BusLocation.DoesNotExist:
+                continue
+
+        context = {
+            'bus_locations': bus_locations,
+            'websocket_url': 'ws://' + request.get_host() + '/ws/tracking/'
+        }
+        return render(request, 'tracking/live_tracking.html', context)

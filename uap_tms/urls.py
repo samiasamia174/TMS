@@ -12,12 +12,13 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('sign-out/', views.sign_out, name='sign_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    
+    path('payments/', include('payments.urls')),
+    path('tracking/', include('tracking.urls')),
     # Profile
     path('profile/', views.simple_profile, name='profile'),
     
-    # Direct URLs with consistent naming
-    path('buses/', views.bus_list, name='buses'),  # Changed from bus_list to buses
+    # Direct URLs - MAKE SURE buses/ points to bus_list
+    path('buses/', views.bus_list, name='buses'),
     path('routes/', views.route_list, name='routes'),
     path('booking/', booking_list, name='booking'),
     path('booking/route/<int:route_id>/', route_schedules, name='route_schedules'),
