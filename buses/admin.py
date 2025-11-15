@@ -30,10 +30,10 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('booking_id', 'user', 'schedule', 'booking_date', 'passengers', 'total_amount', 'payment_status', 'is_confirmed')
-    list_filter = ('booking_date', 'payment_status', 'is_confirmed')
+    list_display = ('booking_id', 'user', 'schedule', 'passengers', 'total_amount', 'payment_status', 'is_confirmed')
+    list_filter = ('payment_status', 'is_confirmed')
     search_fields = ('booking_id', 'user__username', 'schedule__bus__bus_number')
-    date_hierarchy = 'booking_date'
+    # date_hierarchy = ...  # No date field available in Booking model
     readonly_fields = ('booking_id',)
     list_editable = ('is_confirmed',)
     list_per_page = 20

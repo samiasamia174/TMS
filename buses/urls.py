@@ -17,3 +17,12 @@ urlpatterns += [
     path('booking/my-bookings/', my_bookings, name='my_bookings'),
     path('booking/cancel/<int:booking_id>/', cancel_booking, name='cancel_booking'),
 ]
+
+# Route and Bus URLs
+from .views import home, route_list, bus_list
+
+urlpatterns += [
+    path('', home, name='home'),
+    path('routes/', route_list, name='route_list'),
+    path('buses/', bus_list, name='bus_list'),
+]

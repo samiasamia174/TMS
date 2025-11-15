@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Book Your Ride - UAP Transportation{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">🚌 Book Your Ride</h1>
+    
+    {% if routes %}
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Select Your Route</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for route in routes %}
+                            <a href="{% url 'route_schedules' route.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ route.start_point }} → {{ route.end_point }}</h6>
+                                    <small class="text-muted">৳{{ route.fare }}</small>
+                                </div>
+                                <p class="mb-1">Estimated time: {{ route.estimated_time }} minutes</p>
+                                <small class="text-muted">Distance: {{ route.distance }} km</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if schedules %}
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Available Schedules</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {% for schedule in schedules %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6>{{ schedule.route.start_point }} → {{ schedule.route.end_point }}</h6>
+                                        <p class="mb-1">
+                                            <strong>Bus:</strong> {{ schedule.bus.bus_name }} ({{ schedule.bus.bus_number }})<br>
+                                            <strong>Departure:</strong> {{ schedule.departure_time|time:"g:i A" }}<br>
+                                            <strong>Arrival:</strong> {{ schedule.arrival_time|time:"g:i A" }}<br>
+                                            <strong>Seats:</strong> {{ schedule.available_seats }}/{{ schedule.bus.capacity }}
+                                        </p>
+                                        <a href="{% url 'book_seat' schedule.id %}" class="btn btn-primary btn-sm mt-2">Book Seat</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <h4>No routes available at the moment.</h4>
+            <p>Please check back later or contact administration.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
