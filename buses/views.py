@@ -137,14 +137,6 @@ def route_list(request):
     }
     return render(request, 'routes/list.html', context)
 
-def bus_list(request):
-    """Display all buses"""
-    buses = Bus.objects.filter(is_active=True).order_by('bus_number')
-    context = {
-        'buses': buses
-    }
-    return render(request, 'buses/list.html', context)
-
 @login_required
 def booking_view(request):
     """Booking page with routes and schedules"""
