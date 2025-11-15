@@ -18,18 +18,18 @@ def make_payment(request):
         email = request.POST.get('email')
 
         try:
-            # ইউজার খুঁজো (student_id = username ধরে নিচ্ছি)
+            # Get user (assuming student_id = username)
             user = User.objects.get(username=student_id)
 
-            # Bus খুঁজো (vehicle_type দিয়ে)
-            bus = Bus.objects.filter(bus_type__iexact=vehicle_type).first()
+            # Get a bus (fallback to first if not found)
+            bus = Bus.objects.filter(bus_type__icontains=vehicle_type).first()
             if not bus:
-                bus = Bus.objects.first()  # fallback
+                bus = Bus.objects.first()
                 if not bus:
-                    messages.error(request, "No bus found. Please add a bus in admin.")
+                    messages.error(request, "No bus available. Add one in admin.")
                     return redirect('make_payment')
 
-            # পেমেন্ট অবজেক্ট তৈরি ও সেভ
+            # Save payment
             transaction_id = str(uuid.uuid4())[:12].upper()
             Payment.objects.create(
                 user=user,
@@ -39,29 +39,33 @@ def make_payment(request):
                 status='completed'
             )
 
-            # ইমেইল পাঠাও
+            # Render email
             subject = "University Transport – Payment Receipt"
-            text_content = f"Thank you {student_name}! Your payment of {amount} BDT is confirmed."
+            text_content = f"Thank you, {student_name}! Payment of {amount} BDT confirmed."
             html_content = render_to_string('payments/receipt_email.html', {
                 'student_name': student_name,
                 'student_id': student_id,
                 'vehicle_type': vehicle_type,
                 'amount': amount,
-                'email': email,
-                'transaction_id': transaction_id,  # ✅ যোগ করা হয়েছে
+                'transaction_id': transaction_id,
             })
 
-            msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [email])
+            # Send email
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=text_content,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email]
+            )
             msg.attach_alternative(html_content, "text/html")
             msg.send()
 
-            messages.success(request, "Payment successful! A receipt has been sent to your email.")
+            messages.success(request, "Payment successful! Check console for email receipt.")
             return redirect('payment_success')
 
         except User.DoesNotExist:
-            messages.error(request, "Student ID not found. Please register first.")
+            messages.error(request, "Student ID not found. Register first.")
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
-            print("Full error:", e)
 
     return render(request, 'payments/payment_form.html')
