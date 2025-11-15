@@ -70,6 +70,7 @@ class Booking(models.Model):
     )
 
     booking_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    booking_date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bus_bookings')
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
     passengers = models.IntegerField(default=1)
@@ -151,6 +152,7 @@ class MonthlySubscription(models.Model):
 
 
     booking_id = models.UUIDField(default=uuid.uuid4, unique=True)
+    booking_date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     schedule = models.ForeignKey('Schedule', on_delete=models.CASCADE)
     passengers = models.IntegerField(default=1)

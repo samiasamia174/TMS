@@ -23,10 +23,14 @@ def route_schedules(request, route_id):
 
 @login_required
 
+
+
+
 def book_seat(request, schedule_id):
-    """Book a seat on a schedule without specific seat number"""
+    """Booking function with booking_date field"""
     from django.shortcuts import get_object_or_404, redirect
     from django.contrib import messages
+    from django.utils import timezone
     from .models import Schedule, Booking
     import uuid
     
@@ -36,28 +40,28 @@ def book_seat(request, schedule_id):
     
     schedule = get_object_or_404(Schedule, id=schedule_id)
     
-    # Check if seats are available
     if schedule.available_seats <= 0:
-        messages.error(request, 'No seats available on this bus.')
+        messages.error(request, 'No seats available.')
         return redirect('route_schedules', route_id=schedule.route.id)
     
     try:
-        # Create booking without specific seat number
-        booking = Booking.objects.create(
+        # Create booking with ALL required fields including booking_date
+        booking = Booking(
             booking_id=uuid.uuid4(),
             user=request.user,
             schedule=schedule,
-            passengers=1,  # Default to 1 passenger
+            passengers=1,
             total_amount=schedule.route.fare,
             payment_status='pending',
-            is_confirmed=False
+            is_confirmed=False,
+            booking_date=timezone.now()  # This field exists in database
         )
+        booking.save()
         
-        # Update available seats
         schedule.available_seats -= 1
         schedule.save()
         
-        messages.success(request, f'Booking successful! Your booking ID is {booking.booking_id}')
+        messages.success(request, f'Booking successful! ID: {booking.booking_id}')
         return redirect('my_bookings')
         
     except Exception as e:
