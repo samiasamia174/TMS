@@ -153,3 +153,7 @@ def booking_view(request):
         'schedules': schedules
     }
     return render(request, 'booking/booking.html', context)
+
+def dashboard(request):
+    """User dashboard view"""
+    return render(request, 'dashboard.html')

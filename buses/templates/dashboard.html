@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - TMS</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; }
+        .nav { margin: 20px 0; }
+        .nav a { margin-right: 15px; text-decoration: none; color: #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Dashboard</h1>
+        <p>Welcome to your dashboard!</p>
+        
+        <div class="nav">
+            <a href="{% url 'profile' %}">View Profile</a>
+            <a href="{% url 'search_routes' %}">Book Tickets</a>
+            <a href="{% url 'contact_us' %}">Contact Us</a>
+            <a href="{% url 'sign_out' %}">Sign Out</a>
+        </div>
+    </div>
+</body>
+</html>
