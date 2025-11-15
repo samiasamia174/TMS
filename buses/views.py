@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 User = get_user_model()
 
 # Your existing signup view - enhanced with messages
+from django.shortcuts import render
+
 def signup(request):
     User = get_user_model()
     
@@ -213,3 +215,6 @@ def confirmation(request):
 
 def contact_us(request):
     return render(request, 'contact.html')
+
+def simple_profile(request):
+    return render(request, 'profile.html')

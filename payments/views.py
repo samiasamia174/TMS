@@ -69,3 +69,7 @@ def make_payment(request):
             messages.error(request, f"Error: {str(e)}")
 
     return render(request, 'payments/payment_form.html')
+
+
+def payment_success(request):
+    return render(request, 'payments/payment_success.html')
