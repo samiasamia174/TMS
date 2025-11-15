@@ -22,45 +22,47 @@ def route_schedules(request, route_id):
     })
 
 @login_required
+
 def book_seat(request, schedule_id):
-    """Book a seat on a schedule"""
+    """Book a seat on a schedule without specific seat number"""
+    from django.shortcuts import get_object_or_404, redirect
+    from django.contrib import messages
+    from .models import Schedule, Booking
+    import uuid
+    
+    if not request.user.is_authenticated:
+        messages.error(request, 'Please login to book a seat.')
+        return redirect('signin')
+    
     schedule = get_object_or_404(Schedule, id=schedule_id)
     
-    if request.method == 'POST':
-        try:
-            # For now, auto-assign next available seat
-            booked_seats = Booking.objects.filter(schedule=schedule).values_list('seat_number', flat=True)
-            all_seats = list(range(1, schedule.bus.capacity + 1))
-            available_seats = [seat for seat in all_seats if seat not in booked_seats]
-            
-            if available_seats:
-                seat_number = available_seats[0]
-                
-                # Create booking
-                booking = Booking.objects.create(
-                    user=request.user,
-                    schedule=schedule,
-                    seat_number=seat_number,
-                    status='confirmed'
-                )
-                
-                # Update available seats
-                schedule.available_seats -= 1
-                schedule.save()
-                
-                messages.success(request, f'Booking confirmed! Seat {seat_number} on {schedule.bus.bus_number}')
-                return redirect('my_bookings')
-            else:
-                messages.error(request, 'No seats available on this bus')
-                return redirect('route_schedules', route_id=schedule.route.id)
-                
-        except Exception as e:
-            messages.error(request, f'Booking failed: {str(e)}')
-            return redirect('route_schedules', route_id=schedule.route.id)
+    # Check if seats are available
+    if schedule.available_seats <= 0:
+        messages.error(request, 'No seats available on this bus.')
+        return redirect('route_schedules', route_id=schedule.route.id)
     
-    return redirect('booking_list')
-
-@login_required
+    try:
+        # Create booking without specific seat number
+        booking = Booking.objects.create(
+            booking_id=uuid.uuid4(),
+            user=request.user,
+            schedule=schedule,
+            passengers=1,  # Default to 1 passenger
+            total_amount=schedule.route.fare,
+            payment_status='pending',
+            is_confirmed=False
+        )
+        
+        # Update available seats
+        schedule.available_seats -= 1
+        schedule.save()
+        
+        messages.success(request, f'Booking successful! Your booking ID is {booking.booking_id}')
+        return redirect('my_bookings')
+        
+    except Exception as e:
+        messages.error(request, f'Booking failed: {str(e)}')
+        return redirect('route_schedules', route_id=schedule.route.id)
 def my_bookings(request):
     """Show user's bookings"""
     bookings = Booking.objects.filter(user=request.user).order_by('-booking_date')
