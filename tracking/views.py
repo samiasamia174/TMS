@@ -131,3 +131,34 @@ class UpdateLocationView(View):
                     "data": update_data
                 }
             )
+
+    # tracking/views.py - live_tracking function update করুন
+
+    @login_required
+    def live_tracking(request):
+        """Display live tracking map with WebSocket support"""
+        buses = Bus.objects.filter(status='active')
+
+        # Get latest location for each bus
+        bus_locations = []
+        for bus in buses:
+            try:
+                location = BusLocation.objects.filter(bus=bus, is_active=True).latest()
+                bus_status = getattr(bus, 'current_status', None)
+
+                bus_locations.append({
+                    'bus': bus,
+                    'location': location,
+                    'status': bus_status,
+                    'latitude': float(location.latitude),
+                    'longitude': float(location.longitude),
+                    'speed': float(location.speed) if location.speed else 0,
+                })
+            except BusLocation.DoesNotExist:
+                continue
+
+        context = {
+            'bus_locations': bus_locations,
+            'websocket_url': 'ws://' + request.get_host() + '/ws/tracking/'
+        }
+        return render(request, 'tracking/live_tracking.html', context)
