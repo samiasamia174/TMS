@@ -65,3 +65,7 @@ def make_payment(request):
             print("Email/Payment error:", e)
 
         return render(request, 'payments/payment_form.html')
+
+
+def payment_success(request):
+    return render(request, 'payments/payment_success.html')
