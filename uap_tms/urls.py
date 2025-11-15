@@ -12,7 +12,7 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('sign-out/', views.sign_out, name='sign_out'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    
+    path('payments/', include('payments.urls')),
     # Profile
     path('profile/', views.simple_profile, name='profile'),
     
