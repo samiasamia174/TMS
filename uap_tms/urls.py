@@ -29,3 +29,4 @@ urlpatterns = [
     # Contact us page
     path('contact-us/', views.contact_us, name='contact_us'),
 ]
+# Test verification - Sat Nov 15 22:58:58 +06 2025
