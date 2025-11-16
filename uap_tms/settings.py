@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django_extensions',
-    
+    'channels',
     # Our apps
     'accounts',
     #'buses',
@@ -152,6 +152,12 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Test verification - Sat Nov 15 22:57:22 +06 2025
