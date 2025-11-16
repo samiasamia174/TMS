@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #'django_extensions',
-    
+    'channels',
     # Our apps
     'accounts',
     #'buses',
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'uap_tms.urls'
 
 TEMPLATES = [
     {
@@ -124,10 +124,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-# Login URLs
 LOGIN_URL = 'buses:signin'
-LOGIN_REDIRECT_URL = 'accounts:dashboard'
-LOGOUT_REDIRECT_URL = 'accounts:home'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'home'
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
@@ -148,22 +147,17 @@ LOGIN_URL = 'buses:signin'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-
-# Login settings
-LOGIN_URL = 'buses:signin'
-LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'home'
-
-
-
-
-
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Test verification - Sat Nov 15 22:57:22 +06 2025
